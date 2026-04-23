@@ -1,5 +1,4 @@
 @echo off
-cd /d "%~dp0..\"
 echo Запуск сервера...
 start http://localhost:8080/index125.html
 python -m http.server 8080
