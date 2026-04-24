@@ -6,8 +6,20 @@
   <title>Stikers</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
+    @font-face {
+      font-family: 'Mulish';
+      src: url('fonts/Mulish-VariableFont_wght.ttf') format('truetype');
+      font-weight: 100 900;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Mulish';
+      src: url('fonts/Mulish-Italic-VariableFont_wght.ttf') format('truetype');
+      font-weight: 100 900;
+      font-style: italic;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #fff; height: 100vh; display: flex; flex-direction: column; }
+    body { font-family: 'Mulish', 'Segoe UI', sans-serif; background: #0f0f1a; color: #fff; height: 100vh; display: flex; flex-direction: column; }
 
     /* AUTH */
     #auth-screen {
@@ -291,7 +303,7 @@
           top:4px;left:0;width:36px;
           text-align:center;
           color:#fff;font-weight:700;font-size:14px;
-          font-family:'Segoe UI',sans-serif;
+          font-family:'Mulish','Segoe UI',sans-serif;
         ">${letter}</span>
       </div>`,
       iconSize: [36, 44], iconAnchor: [18, 44], popupAnchor: [0, -46]
@@ -378,7 +390,7 @@
         const codes = { 1: 'Доступ запрещён — разреши геолокацию в браузере', 2: 'Позиция недоступна', 3: 'Таймаут' };
         alert('Ошибка геолокации: ' + (codes[err.code] || err.message));
       },
-      { enableHighAccuracy: false, timeout: 30000, maximumAge: 60000 }
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
   }
 
@@ -399,7 +411,7 @@
     }, err => {
       const codes = { 1: 'Доступ запрещён', 2: 'Позиция недоступна', 3: 'Таймаут' };
       alert('Ошибка: ' + (codes[err.code] || err.message));
-    }, { enableHighAccuracy: false, timeout: 30000, maximumAge: 60000 });
+    }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
   }
 
   document.getElementById('btn-share-location').onclick = () => {
