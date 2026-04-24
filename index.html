@@ -483,6 +483,7 @@
     loadFriends();
     map.invalidateSize();
     getAvatar(currentUser).then(updateProfileBtn);
+    requestNotifPermission();
     if (!navigator.geolocation) {
       alert('Геолокация не поддерживается браузером');
       return;
@@ -587,10 +588,30 @@
     }
   }
 
+  const watchedChats = new Set();
+  function watchFriendChat(name) {
+    if (watchedChats.has(name)) return;
+    watchedChats.add(name);
+    const chatId = getChatId(currentUser, name);
+    let lastTs = Date.now();
+    onValue(ref(db, `chats/${chatId}`), snap => {
+      if (!snap.exists()) return;
+      const msgs = Object.values(snap.val());
+      msgs.forEach(msg => {
+        if (msg.from !== currentUser && (msg.ts || 0) > lastTs) {
+          showNotif(msg.from, msg.text || '💬 Сообщение');
+        }
+      });
+      const tsList = msgs.map(m => m.ts).filter(Boolean);
+      if (tsList.length) lastTs = Math.max(...tsList);
+    });
+  }
+
   const watchedFriends = new Set();
   function watchFriendLocation(name) {
     if (watchedFriends.has(name)) return;
     watchedFriends.add(name);
+    watchFriendChat(name);
     onValue(ref(db, `locations/${name}`), snap => {
       const dotEl = document.getElementById(`dot-${name}`);
       const statusEl = document.getElementById(`status-${name}`);
@@ -761,6 +782,22 @@
 
   function escHtml(str) {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // ── NOTIFICATIONS ───────────────────────────────────────────────
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+
+  async function requestNotifPermission() {
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'default') await Notification.requestPermission();
+  }
+
+  function showNotif(from, text) {
+    if (document.visibilityState === 'visible' && chatWith === from) return;
+    if (Notification.permission !== 'granted') return;
+    new Notification('💬 ' + from, { body: text, icon: 'img/stikers.png' });
   }
 
   // ── AUTO LOGIN ───────────────────────────────────────────────────
