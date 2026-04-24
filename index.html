@@ -163,13 +163,6 @@
       padding: 10px 16px; background: #6366f1; border: none;
       border-radius: 10px; color: #fff; cursor: pointer; font-size: 18px;
     }
-    .btn-voice {
-      padding: 10px 14px; background: #ec4899; border: none;
-      border-radius: 10px; color: #fff; cursor: pointer; font-size: 18px;
-    }
-    .btn-voice.recording { background: #f87171; animation: pulse 1s infinite; }
-    .msg audio { width: 100%; max-width: 200px; margin-top: 4px; }
-
     .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 9999; }
     .modal.show { display: flex; }
     .modal-box { background: #1a1a2e; border-radius: 16px; padding: 24px; width: 90%; max-width: 400px; }
@@ -182,6 +175,13 @@
     .modal-buttons button { flex: 1; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; }
     .btn-cancel { background: #333; color: #fff; }
     .btn-save { background: #6366f1; color: #fff; }
+
+    .profile-header { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .profile-avatar { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; flex-shrink: 0; overflow: hidden; }
+    .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .profile-name { font-size: 20px; font-weight: 700; }
+    .profile-meta { font-size: 13px; color: #888; }
+    .btn-change-avatar { background: #6366f1; border: none; border-radius: 8px; padding: 8px 18px; color: #fff; cursor: pointer; font-size: 13px; margin-top: 4px; }
 
     .empty-state { text-align: center; color: #555; padding: 30px 20px; font-size: 14px; }
 
@@ -249,7 +249,7 @@
       <h2>Stikers</h2>
     </div>
     <div class="header-right">
-      <span class="user-badge" id="current-user-badge" style="cursor:pointer" title="Сменить аватар"></span>
+      <span class="user-badge" id="current-user-badge" style="cursor:pointer" title="Мой профиль"></span>
       <button class="btn-share" id="btn-share-location">📍 Поделиться локацией</button>
       <button class="btn-logout" id="btn-logout">Выйти</button>
     </div>
@@ -272,11 +272,40 @@
         <div class="chat-header">Чат с: <span id="chat-with-name">выберите друга</span></div>
         <div id="messages"></div>
         <div class="chat-input">
-          <button class="btn-voice" id="btn-voice">🎤</button>
           <input type="text" id="msg-input" placeholder="Сообщение..." maxlength="500" />
           <button id="btn-send">➤</button>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL (свой) -->
+<div class="modal" id="profile-modal">
+  <div class="modal-box">
+    <div class="profile-header">
+      <div class="profile-avatar" id="my-profile-avatar"></div>
+      <div class="profile-name" id="my-profile-name"></div>
+      <div class="profile-meta" id="my-profile-meta"></div>
+      <button class="btn-change-avatar" id="btn-open-avatar">🖼 Сменить аватар</button>
+    </div>
+    <div class="modal-buttons">
+      <button class="btn-cancel" id="btn-close-profile">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- FRIEND PROFILE MODAL (чужой) -->
+<div class="modal" id="friend-profile-modal">
+  <div class="modal-box">
+    <div class="profile-header">
+      <div class="profile-avatar" id="friend-profile-avatar"></div>
+      <div class="profile-name" id="friend-profile-name"></div>
+      <div class="profile-meta" id="friend-profile-meta"></div>
+    </div>
+    <div class="modal-buttons">
+      <button class="btn-cancel" id="btn-close-friend-profile">Закрыть</button>
+      <button class="btn-save" id="btn-profile-chat">💬 Написать</button>
     </div>
   </div>
 </div>
@@ -299,8 +328,6 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getDatabase, ref, set, get, onValue, push, serverTimestamp, remove }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-  import { getStorage, ref as sRef, uploadBytes, getDownloadURL }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
   // ── FIREBASE CONFIG ──────────────────────────────────────────────
   // Замените на ваш Firebase проект (бесплатный Spark план)
@@ -317,8 +344,6 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
-  const storage = getStorage(app);
-
   // ── COLORS ───────────────────────────────────────────────────────
   const COLORS = ['#6366f1','#ec4899','#f59e0b','#22c55e','#06b6d4','#f97316','#a855f7','#14b8a6'];
   const colorFor = name => COLORS[Math.abs([...name].reduce((a,c)=>a+c.charCodeAt(0),0)) % COLORS.length];
@@ -329,8 +354,6 @@
   let markers = {};
   let chatWith = null;
   let chatUnsub = null;
-  let mediaRecorder = null;
-  let audioChunks = [];
   let selectedAvatar = null;
 
   const AVATARS = [
@@ -552,9 +575,7 @@
         <div class="online-dot offline-dot" id="dot-${name}"></div>
         <button class="btn-chat-small" onclick="window.openChatWith('${name}')">💬</button>
       `;
-      div.querySelector('.friend-avatar').onclick = () => {
-        if (markers[name]) { map.setView(markers[name].getLatLng(), 10); markers[name].openPopup(); }
-      };
+      div.querySelector('.friend-avatar').onclick = () => window.openFriendProfile(name);
       list.appendChild(div);
     }
   }
@@ -605,13 +626,9 @@
       Object.values(snap.val()).forEach(msg => {
         const div = document.createElement('div');
         div.className = 'msg ' + (msg.from === currentUser ? 'mine' : 'theirs');
-        if (msg.voice) {
-          div.innerHTML = (msg.from !== currentUser ? `<div class="msg-sender">${msg.from}</div>` : '') + `<audio controls src="${msg.voice}"></audio>`;
-        } else {
-          div.innerHTML = msg.from !== currentUser
-            ? `<div class="msg-sender">${msg.from}</div>${escHtml(msg.text)}`
-            : escHtml(msg.text);
-        }
+        div.innerHTML = msg.from !== currentUser
+          ? `<div class="msg-sender">${msg.from}</div>${escHtml(msg.text)}`
+          : escHtml(msg.text);
         container.appendChild(div);
       });
       container.scrollTop = container.scrollHeight;
@@ -630,40 +647,91 @@
     input.value = '';
   }
 
-  // ── VOICE ────────────────────────────────────────────────────────
-  document.getElementById('btn-voice').onclick = async () => {
-    if (!chatWith) { alert('Выберите друга'); return; }
-    const btn = document.getElementById('btn-voice');
-    if (mediaRecorder && mediaRecorder.state === 'recording') {
-      mediaRecorder.stop();
-      btn.classList.remove('recording');
-      btn.textContent = '🎤';
-    } else {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        audioChunks = [];
-        mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-        mediaRecorder.onstop = async () => {
-          const blob = new Blob(audioChunks, { type: 'audio/webm' });
-          const storageRef = sRef(storage, `voice/${Date.now()}_${currentUser}.webm`);
-          await uploadBytes(storageRef, blob);
-          const url = await getDownloadURL(storageRef);
-          const chatId = getChatId(currentUser, chatWith);
-          push(ref(db, `chats/${chatId}`), { from: currentUser, voice: url, ts: serverTimestamp() });
-          stream.getTracks().forEach(t => t.stop());
-        };
-        mediaRecorder.start();
-        btn.classList.add('recording');
-        btn.textContent = '⏹';
-      } catch (err) {
-        alert('Ошибка доступа к микрофону: ' + err.message);
-      }
-    }
+  // ── PROFILE ───────────────────────────────────────────────────────
+  document.getElementById('current-user-badge').onclick = async () => {
+    const snap = await get(ref(db, `users/${currentUser}`));
+    const data = snap.val() || {};
+    const avatar = data.avatar || null;
+    const color = colorFor(currentUser);
+    const avatarEl = document.getElementById('my-profile-avatar');
+    avatarEl.style.background = avatar ? 'transparent' : color;
+    avatarEl.innerHTML = avatar ? `<img src="${avatar}" />` : currentUser[0].toUpperCase();
+    document.getElementById('my-profile-name').textContent = currentUser;
+    document.getElementById('my-profile-meta').textContent = data.createdAt
+      ? 'Зарегистрирован: ' + new Date(data.createdAt).toLocaleDateString('ru')
+      : '';
+    document.getElementById('profile-modal').classList.add('show');
+  };
+
+  document.getElementById('btn-close-profile').onclick = () =>
+    document.getElementById('profile-modal').classList.remove('show');
+
+  document.getElementById('btn-open-avatar').onclick = () => {
+    document.getElementById('profile-modal').classList.remove('show');
+    openAvatarModal();
+  };
+
+  let friendProfileTarget = null;
+  window.openFriendProfile = async name => {
+    friendProfileTarget = name;
+    const snap = await get(ref(db, `users/${name}`));
+    const data = snap.val() || {};
+    const avatar = data.avatar || null;
+    const color = colorFor(name);
+    const avatarEl = document.getElementById('friend-profile-avatar');
+    avatarEl.style.background = avatar ? 'transparent' : color;
+    avatarEl.innerHTML = avatar ? `<img src="${avatar}" />` : name[0].toUpperCase();
+    document.getElementById('friend-profile-name').textContent = name;
+    document.getElementById('friend-profile-meta').textContent = data.createdAt
+      ? 'Зарегистрирован: ' + new Date(data.createdAt).toLocaleDateString('ru')
+      : '';
+    document.getElementById('friend-profile-modal').classList.add('show');
+  };
+
+  document.getElementById('btn-close-friend-profile').onclick = () =>
+    document.getElementById('friend-profile-modal').classList.remove('show');
+
+  document.getElementById('btn-profile-chat').onclick = () => {
+    document.getElementById('friend-profile-modal').classList.remove('show');
+    window.openChatWith(friendProfileTarget);
   };
 
   // ── AVATAR ───────────────────────────────────────────────────────
-  document.getElementById('current-user-badge').onclick = () => {
+  function openAvatarModal() {
+    const modal = document.getElementById('avatar-modal');
+    const grid = document.getElementById('avatar-grid');
+    grid.innerHTML = '';
+    AVATARS.forEach(url => {
+      const img = document.createElement('img');
+      img.src = url;
+      img.className = 'avatar-option';
+      img.onclick = () => {
+        grid.querySelectorAll('.avatar-option').forEach(i => i.classList.remove('selected'));
+        img.classList.add('selected');
+        selectedAvatar = url;
+      };
+      grid.appendChild(img);
+    });
+    modal.classList.add('show');
+  }
+
+  document.getElementById('btn-cancel-avatar').onclick = () => {
+    document.getElementById('avatar-modal').classList.remove('show');
+    selectedAvatar = null;
+  };
+
+  document.getElementById('btn-save-avatar').onclick = async () => {
+    if (!selectedAvatar) { alert('Выбери аватар'); return; }
+    await set(ref(db, `users/${currentUser}/avatar`), selectedAvatar);
+    document.getElementById('avatar-modal').classList.remove('show');
+    selectedAvatar = null;
+    if (markers[currentUser]) {
+      const pos = markers[currentUser].getLatLng();
+      removeMarker(currentUser);
+      placeMarker(currentUser, pos.lat, pos.lng, Date.now());
+    }
+    renderFriends();
+  };
     const modal = document.getElementById('avatar-modal');
     const grid = document.getElementById('avatar-grid');
     grid.innerHTML = '';
