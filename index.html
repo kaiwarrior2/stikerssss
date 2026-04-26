@@ -231,6 +231,64 @@
     .map-sticker-marker { font-size: 28px; cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
     .friend-dist { font-size: 11px; color: #06b6d4; margin-left: 4px; }
 
+    /* FRIEND ACTIONS */
+    .friend-actions { display: flex; gap: 4px; flex-shrink: 0; }
+    .btn-icon { background: transparent; border: 1px solid #333; border-radius: 6px; padding: 4px 7px; color: #aaa; cursor: pointer; font-size: 13px; transition: all 0.15s; }
+    .btn-icon:hover { border-color: #6366f1; color: #fff; }
+    .btn-icon.danger:hover { border-color: #f87171; color: #f87171; }
+    .friend-search { width: 100%; padding: 8px 12px; background: #0f0f1a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 13px; outline: none; margin-bottom: 10px; }
+    .friend-search:focus { border-color: #6366f1; }
+
+    /* CHAT ENHANCEMENTS */
+    .msg-wrap { display: flex; flex-direction: column; max-width: 85%; }
+    .msg-wrap.mine { align-self: flex-end; align-items: flex-end; }
+    .msg-wrap.theirs { align-self: flex-start; align-items: flex-start; }
+    .msg { max-width: 100%; position: relative; }
+    .msg-wrap.mine .msg { background: #6366f1; border-bottom-right-radius: 4px; }
+    .msg-wrap.theirs .msg { background: #2a2a3e; border-bottom-left-radius: 4px; }
+    .msg-meta { display: flex; align-items: center; gap: 6px; margin-top: 3px; font-size: 11px; color: #555; }
+    .msg-wrap.mine .msg-meta { justify-content: flex-end; }
+    .msg-ticks { color: #888; font-size: 12px; }
+    .msg-ticks.read { color: #6366f1; }
+    .msg-reactions { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 4px; }
+    .reaction-badge { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 2px 7px; font-size: 13px; cursor: pointer; transition: background 0.15s; user-select: none; }
+    .reaction-badge:hover, .reaction-badge.mine { background: rgba(99,102,241,0.25); border-color: #6366f1; }
+    .reaction-picker { display: none; position: absolute; bottom: calc(100% + 6px); background: #1a1a2e; border: 1px solid #333; border-radius: 12px; padding: 6px 8px; gap: 4px; z-index: 50; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+    .reaction-picker.show { display: flex; }
+    .reaction-picker span { font-size: 20px; cursor: pointer; padding: 2px 4px; border-radius: 6px; transition: background 0.1s; }
+    .reaction-picker span:hover { background: rgba(255,255,255,0.1); }
+    .msg-img { max-width: 200px; max-height: 200px; border-radius: 8px; display: block; cursor: pointer; margin-top: 4px; }
+    .btn-del-msg { background: transparent; border: none; color: #555; cursor: pointer; font-size: 11px; padding: 0 2px; transition: color 0.15s; }
+    .btn-del-msg:hover { color: #f87171; }
+    .typing-indicator { font-size: 12px; color: #888; padding: 0 12px 6px; min-height: 20px; font-style: italic; }
+    .chat-input-row { display: flex; gap: 8px; }
+    .btn-photo { padding: 10px 12px; background: #2a2a3e; border: none; border-radius: 10px; color: #fff; cursor: pointer; font-size: 16px; flex-shrink: 0; }
+    .btn-photo:hover { background: #333; }
+
+    /* GROUP CHAT */
+    .group-chat-header { padding: 10px 16px; background: rgba(99,102,241,0.1); border-bottom: 1px solid #2a2a3e; font-size: 13px; color: #6366f1; font-weight: 600; cursor: pointer; }
+    .group-chat-header:hover { background: rgba(99,102,241,0.2); }
+
+    /* PRIVACY PANEL */
+    .privacy-panel { padding: 12px; border-top: 1px solid #2a2a3e; }
+    .privacy-panel h4 { font-size: 13px; color: #888; margin-bottom: 10px; }
+    .privacy-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 13px; }
+    .toggle-switch { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; inset: 0; background: #333; border-radius: 22px; cursor: pointer; transition: background 0.2s; }
+    .toggle-slider:before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform 0.2s; }
+    .toggle-switch input:checked + .toggle-slider { background: #6366f1; }
+    .toggle-switch input:checked + .toggle-slider:before { transform: translateX(18px); }
+    .privacy-select { background: #0f0f1a; border: 1px solid #333; border-radius: 6px; color: #fff; padding: 4px 8px; font-size: 12px; outline: none; }
+    .allowed-list { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .allowed-chip { background: rgba(99,102,241,0.2); border: 1px solid #6366f1; border-radius: 20px; padding: 3px 10px; font-size: 12px; display: flex; align-items: center; gap: 4px; }
+    .allowed-chip button { background: none; border: none; color: #aaa; cursor: pointer; font-size: 14px; line-height: 1; padding: 0; }
+
+    /* FULLSCREEN IMG */
+    #img-fullscreen { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; z-index: 99999; cursor: zoom-out; }
+    #img-fullscreen.show { display: flex; }
+    #img-fullscreen img { max-width: 90vw; max-height: 90vh; border-radius: 10px; }
+
     .leaflet-control-attribution { display: none !important; }
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -355,18 +413,46 @@
         <div class="tab" data-tab="chat">💬 Чат</div>
       </div>
       <div id="tab-friends">
+        <input type="text" id="friend-search" class="friend-search" placeholder="🔍 Поиск друзей..." />
         <div class="add-friend">
           <input type="text" id="friend-input" placeholder="Имя друга..." maxlength="20" />
           <button id="btn-add-friend">+</button>
         </div>
         <div id="friends-list"></div>
+        <div class="privacy-panel" id="privacy-panel">
+          <h4>🔒 Приватность</h4>
+          <div class="privacy-row">
+            <span>Режим невидимки</span>
+            <label class="toggle-switch"><input type="checkbox" id="toggle-invisible" /><span class="toggle-slider"></span></label>
+          </div>
+          <div class="privacy-row">
+            <span>Авто-скрытие через</span>
+            <select class="privacy-select" id="auto-hide-select">
+              <option value="0">выкл</option>
+              <option value="5">5 мин</option>
+              <option value="15">15 мин</option>
+              <option value="30">30 мин</option>
+              <option value="60">1 час</option>
+            </select>
+          </div>
+          <div class="privacy-row" style="flex-direction:column;align-items:flex-start;gap:6px">
+            <span>Видят локацию:</span>
+            <div class="allowed-list" id="allowed-list"></div>
+          </div>
+        </div>
       </div>
       <div id="tab-chat" style="display:none;">
+        <div class="group-chat-header" id="btn-group-chat">👥 Групповой чат</div>
         <div class="chat-header">Чат с: <span id="chat-with-name">выберите друга</span></div>
+        <div class="typing-indicator" id="typing-indicator"></div>
         <div id="messages"></div>
         <div class="chat-input">
-          <input type="text" id="msg-input" placeholder="Сообщение..." maxlength="500" />
-          <button id="btn-send">➤</button>
+          <div class="chat-input-row" style="width:100%">
+            <button class="btn-photo" id="btn-send-photo">📷</button>
+            <input type="text" id="msg-input" placeholder="Сообщение..." maxlength="500" />
+            <button id="btn-send">➤</button>
+          </div>
+          <input type="file" id="photo-file-input" accept="image/*" style="position:absolute;opacity:0;width:0;height:0" />
         </div>
       </div>
     </div>
@@ -399,6 +485,8 @@
     <div class="modal-buttons">
       <button class="btn-cancel" id="btn-close-friend-profile">Закрыть</button>
       <button class="btn-save" id="btn-profile-chat">💬 Написать</button>
+      <button class="btn-cancel" id="btn-profile-remove" style="background:#7f1d1d;color:#fca5a5">🚫 Удалить</button>
+      <button class="btn-cancel" id="btn-profile-block" style="background:#1c1917;color:#f97316">⛔ Блок</button>
     </div>
   </div>
 </div>
@@ -432,6 +520,9 @@
   </div>
 </div>
 
+<!-- FULLSCREEN IMG -->
+<div id="img-fullscreen"><img id="img-fullscreen-src" /></div>
+
 <!-- НЕХЕРА ВАШИ СКРИПТЫ -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script type="module">
@@ -461,6 +552,7 @@
   // ── STATE ────────────────────────────────────────────────────────
   let currentUser = null;
   let friends = {};
+  let blocked = {};
   let markers = {};
   let stickerMarkers = {};
   let chatWith = null;
@@ -469,6 +561,9 @@
   let routeLayer = null;
   let myLat = null, myLng = null;
   let friendLocations = {};
+  let isGroupChat = false;
+  let autoHideTimer = null;
+  let privacyAllowed = null; // null = all, Set = only these
 
   // ── MAP ──────────────────────────────────────────────────────────
   const map = L.map('map', { zoomControl: true }).setView([20, 0], 2);
@@ -593,6 +688,8 @@
     document.getElementById('current-user-badge').textContent = '👤';
     loadFriends();
     loadStickers();
+    loadBlocked();
+    loadPrivacySettings();
     map.invalidateSize();
     getAvatar(currentUser).then(updateProfileBtn);
     requestNotifPermission();
@@ -678,9 +775,10 @@
 
   async function renderFriends() {
     const list = document.getElementById('friends-list');
-    const names = Object.keys(friends);
+    const query = (document.getElementById('friend-search')?.value || '').toLowerCase();
+    const names = Object.keys(friends).filter(n => !blocked[n] && n.toLowerCase().includes(query));
     if (!names.length) {
-      list.innerHTML = '<div class="empty-state">Добавьте друзей по имени</div>';
+      list.innerHTML = '<div class="empty-state">' + (Object.keys(friends).length ? 'Никто не найден' : 'Добавьте друзей по имени') + '</div>';
       return;
     }
     list.innerHTML = '';
@@ -699,12 +797,17 @@
           <div class="friend-status" id="status-${name}">нет данных</div>
         </div>
         <div class="online-dot offline-dot" id="dot-${name}"></div>
-        <button class="btn-chat-small" onclick="window.openChatWith('${name}')">💬</button>
+        <div class="friend-actions">
+          <button class="btn-icon" title="Чат" onclick="window.openChatWith('${name}')">💬</button>
+          <button class="btn-icon danger" title="Удалить" onclick="window.removeFriend('${name}')">✕</button>
+        </div>
       `;
       div.querySelector('.friend-avatar').onclick = () => window.openFriendProfile(name);
       list.appendChild(div);
     }
   }
+
+  document.getElementById('friend-search').addEventListener('input', renderFriends);
 
   const watchedChats = new Set();
   function watchFriendChat(name) {
@@ -758,19 +861,51 @@
   }
 
   // ── CHAT ─────────────────────────────────────────────────────────
+  const REACTIONS = ['👍','❤️','😂','😮','🔥','👎'];
+
   window.openChatWith = name => {
-    chatWith = name;
+    chatWith = name; isGroupChat = false;
     document.getElementById('chat-with-name').textContent = name;
     switchTab('chat');
     loadMessages();
   };
 
-  function getChatId(a, b) { return [a, b].sort().join('__'); }
+  document.getElementById('btn-group-chat').onclick = () => {
+    chatWith = '__group__'; isGroupChat = true;
+    document.getElementById('chat-with-name').textContent = 'Все друзья';
+    switchTab('chat');
+    loadMessages();
+  };
+
+  function getChatId(a, b) {
+    if (a === '__group__' || b === '__group__') return '__group__';
+    return [a, b].sort().join('__');
+  }
+
+  let typingTimeout = null;
+  document.getElementById('msg-input').addEventListener('input', () => {
+    if (!chatWith) return;
+    const chatId = getChatId(currentUser, chatWith);
+    set(ref(db, `typing/${chatId}/${currentUser}`), true);
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => remove(ref(db, `typing/${chatId}/${currentUser}`)), 2000);
+  });
+
+  let typingUnsub = null;
+  function watchTyping(chatId) {
+    if (typingUnsub) typingUnsub();
+    typingUnsub = onValue(ref(db, `typing/${chatId}`), snap => {
+      const typers = snap.val() ? Object.keys(snap.val()).filter(u => u !== currentUser) : [];
+      document.getElementById('typing-indicator').textContent = typers.length ? typers.join(', ') + ' печатает...' : '';
+    });
+  }
 
   function loadMessages() {
     if (chatUnsub) chatUnsub();
     if (!chatWith) return;
     const chatId = getChatId(currentUser, chatWith);
+    watchTyping(chatId);
+    set(ref(db, `read/${chatId}/${currentUser}`), Date.now());
     const msgsRef = ref(db, `chats/${chatId}`);
     chatUnsub = onValue(msgsRef, snap => {
       const container = document.getElementById('messages');
@@ -779,18 +914,92 @@
         container.innerHTML = '<div class="empty-state">Начните общение!</div>';
         return;
       }
-      Object.values(snap.val()).forEach((msg, idx) => {
-        const div = document.createElement('div');
-        div.className = 'msg ' + (msg.from === currentUser ? 'mine' : 'theirs');
-        div.style.animationDelay = `${Math.min(idx * 0.04, 0.3)}s`;
-        div.innerHTML = msg.from !== currentUser
-          ? `<div class="msg-sender">${msg.from}</div>${escHtml(msg.text)}`
-          : escHtml(msg.text);
-        container.appendChild(div);
+      Object.entries(snap.val()).forEach(([msgId, msg], idx) => {
+        const isMine = msg.from === currentUser;
+        const wrap = document.createElement('div');
+        wrap.className = 'msg-wrap ' + (isMine ? 'mine' : 'theirs');
+        wrap.style.animationDelay = `${Math.min(idx * 0.04, 0.3)}s`;
+
+        const msgEl = document.createElement('div');
+        msgEl.className = 'msg';
+        msgEl.style.padding = '9px 13px';
+        msgEl.style.borderRadius = '12px';
+        msgEl.style.fontSize = '13px';
+        msgEl.style.lineHeight = '1.4';
+        msgEl.style.wordBreak = 'break-word';
+        if (!isMine) msgEl.innerHTML = `<div class="msg-sender">${msg.from}</div>`;
+        if (msg.img) {
+          msgEl.innerHTML += `<img class="msg-img" src="${msg.img}" onclick="window.openImg('${msg.img}')" />`;
+        } else {
+          msgEl.innerHTML += escHtml(msg.text || '');
+        }
+
+        const picker = document.createElement('div');
+        picker.className = 'reaction-picker';
+        REACTIONS.forEach(r => {
+          const s = document.createElement('span');
+          s.textContent = r;
+          s.onclick = e => { e.stopPropagation(); toggleReaction(chatId, msgId, r); picker.classList.remove('show'); };
+          picker.appendChild(s);
+        });
+        msgEl.appendChild(picker);
+        msgEl.addEventListener('dblclick', () => picker.classList.toggle('show'));
+        msgEl.addEventListener('contextmenu', e => { e.preventDefault(); picker.classList.toggle('show'); });
+        wrap.appendChild(msgEl);
+
+        if (msg.reactions) {
+          const reactRow = document.createElement('div');
+          reactRow.className = 'msg-reactions';
+          const counts = {};
+          Object.entries(msg.reactions).forEach(([user, emoji]) => {
+            if (!counts[emoji]) counts[emoji] = { count: 0, mine: false };
+            counts[emoji].count++;
+            if (user === currentUser) counts[emoji].mine = true;
+          });
+          Object.entries(counts).forEach(([emoji, { count, mine }]) => {
+            const badge = document.createElement('span');
+            badge.className = 'reaction-badge' + (mine ? ' mine' : '');
+            badge.textContent = `${emoji} ${count}`;
+            badge.onclick = () => toggleReaction(chatId, msgId, emoji);
+            reactRow.appendChild(badge);
+          });
+          wrap.appendChild(reactRow);
+        }
+
+        const meta = document.createElement('div');
+        meta.className = 'msg-meta';
+        if (isMine) {
+          const delBtn = document.createElement('button');
+          delBtn.className = 'btn-del-msg';
+          delBtn.textContent = '🗑';
+          delBtn.onclick = () => remove(ref(db, `chats/${chatId}/${msgId}`));
+          meta.appendChild(delBtn);
+          const ticks = document.createElement('span');
+          ticks.className = 'msg-ticks';
+          ticks.textContent = '✓✓';
+          get(ref(db, `read/${chatId}/${chatWith}`)).then(s => {
+            if (s.exists() && msg.ts && s.val() >= msg.ts) ticks.classList.add('read');
+          });
+          meta.appendChild(ticks);
+        }
+        wrap.appendChild(meta);
+        container.appendChild(wrap);
       });
       container.scrollTop = container.scrollHeight;
     });
   }
+
+  function toggleReaction(chatId, msgId, emoji) {
+    const rRef = ref(db, `chats/${chatId}/${msgId}/reactions/${currentUser}`);
+    get(rRef).then(s => { s.exists() && s.val() === emoji ? remove(rRef) : set(rRef, emoji); });
+  }
+
+  window.openImg = src => {
+    document.getElementById('img-fullscreen-src').src = src;
+    document.getElementById('img-fullscreen').classList.add('show');
+  };
+  document.getElementById('img-fullscreen').onclick = () =>
+    document.getElementById('img-fullscreen').classList.remove('show');
 
   document.getElementById('btn-send').onclick = sendMessage;
   document.getElementById('msg-input').addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
@@ -800,9 +1009,23 @@
     const text = input.value.trim();
     if (!text || !chatWith) return;
     const chatId = getChatId(currentUser, chatWith);
-    push(ref(db, `chats/${chatId}`), { from: currentUser, text, ts: serverTimestamp() });
+    push(ref(db, `chats/${chatId}`), { from: currentUser, text, ts: Date.now() });
+    remove(ref(db, `typing/${chatId}/${currentUser}`));
     input.value = '';
   }
+
+  document.getElementById('btn-send-photo').onclick = () => document.getElementById('photo-file-input').click();
+  document.getElementById('photo-file-input').onchange = e => {
+    const file = e.target.files[0];
+    if (!file || !chatWith) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const chatId = getChatId(currentUser, chatWith);
+      push(ref(db, `chats/${chatId}`), { from: currentUser, img: ev.target.result, ts: Date.now() });
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
 
   // ── PROFILE ───────────────────────────────────────────────────────
   document.getElementById('current-user-badge').onclick = async () => {
@@ -1034,6 +1257,100 @@
         const popup = `<div class="popup-content"><strong>${s.emoji}</strong>${s.note ? `<br><small>${escHtml(s.note)}</small>` : ''}<br><small style="color:#888">${s.author}</small></div>`;
         stickerMarkers[id] = L.marker([s.lat, s.lng], { icon }).addTo(map).bindPopup(popup);
       });
+    });
+  }
+
+  // ── FRIENDS ACTIONS ───────────────────────────────────────────────
+  window.removeFriend = async name => {
+    if (!confirm(`Удалить ${name} из друзей?`)) return;
+    await remove(ref(db, `friends/${currentUser}/${name}`));
+    await remove(ref(db, `friends/${name}/${currentUser}`));
+    removeMarker(name);
+    delete friendLocations[name];
+  };
+
+  function loadBlocked() {
+    onValue(ref(db, `blocked/${currentUser}`), snap => {
+      blocked = snap.val() || {};
+      renderFriends();
+    });
+  }
+
+  document.getElementById('btn-profile-remove').onclick = async () => {
+    document.getElementById('friend-profile-modal').classList.remove('show');
+    await window.removeFriend(friendProfileTarget);
+  };
+
+  document.getElementById('btn-profile-block').onclick = async () => {
+    if (!confirm(`Заблокировать ${friendProfileTarget}?`)) return;
+    await set(ref(db, `blocked/${currentUser}/${friendProfileTarget}`), true);
+    await remove(ref(db, `friends/${currentUser}/${friendProfileTarget}`));
+    removeMarker(friendProfileTarget);
+    document.getElementById('friend-profile-modal').classList.remove('show');
+  };
+
+  // ── PRIVACY ────────────────────────────────────────────────────────
+  function loadPrivacySettings() {
+    onValue(ref(db, `privacy/${currentUser}`), snap => {
+      const data = snap.val() || {};
+      const invisible = data.invisible || false;
+      document.getElementById('toggle-invisible').checked = invisible;
+      if (invisible) removeMarker(currentUser);
+
+      const autoHide = data.autoHide || 0;
+      document.getElementById('auto-hide-select').value = String(autoHide);
+
+      privacyAllowed = data.allowed ? new Set(Object.keys(data.allowed)) : null;
+      renderAllowedList();
+    });
+  }
+
+  document.getElementById('toggle-invisible').onchange = async e => {
+    const invisible = e.target.checked;
+    await set(ref(db, `privacy/${currentUser}/invisible`), invisible);
+    if (invisible) {
+      await remove(ref(db, `locations/${currentUser}`));
+      removeMarker(currentUser);
+    } else if (myLat !== null) {
+      await set(ref(db, `locations/${currentUser}`), { lat: myLat, lng: myLng, updatedAt: Date.now() });
+      placeMarker(currentUser, myLat, myLng, Date.now());
+    }
+  };
+
+  document.getElementById('auto-hide-select').onchange = async e => {
+    const mins = parseInt(e.target.value);
+    await set(ref(db, `privacy/${currentUser}/autoHide`), mins);
+    if (autoHideTimer) clearTimeout(autoHideTimer);
+    if (mins > 0) {
+      autoHideTimer = setTimeout(async () => {
+        await remove(ref(db, `locations/${currentUser}`));
+        removeMarker(currentUser);
+      }, mins * 60 * 1000);
+    }
+  };
+
+  function renderAllowedList() {
+    const container = document.getElementById('allowed-list');
+    const allFriends = Object.keys(friends);
+    container.innerHTML = '';
+    if (!allFriends.length) { container.innerHTML = '<span style="color:#555;font-size:12px">Друзья не добавлены</span>'; return; }
+    allFriends.forEach(name => {
+      const allowed = !privacyAllowed || privacyAllowed.has(name);
+      const chip = document.createElement('div');
+      chip.className = 'allowed-chip';
+      chip.style.opacity = allowed ? '1' : '0.4';
+      chip.innerHTML = `${name} <button title="Тоггл">${allowed ? '✓' : '✕'}</button>`;
+      chip.querySelector('button').onclick = async () => {
+        if (!privacyAllowed) {
+          privacyAllowed = new Set(allFriends);
+        }
+        if (privacyAllowed.has(name)) privacyAllowed.delete(name);
+        else privacyAllowed.add(name);
+        const allowedObj = {};
+        privacyAllowed.forEach(n => allowedObj[n] = true);
+        await set(ref(db, `privacy/${currentUser}/allowed`), allowedObj);
+      };
+      container.appendChild(chip);
     });
   }
 
