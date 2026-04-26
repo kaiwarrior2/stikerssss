@@ -21,14 +21,26 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Mulish', 'Segoe UI', sans-serif; background: #0f0f1a; color: #fff; height: 100vh; display: flex; flex-direction: column; }
 
+    /* LIQUID GLASS */
+    .liquid-glass {
+      background: rgba(255,255,255,0.06) !important;
+      backdrop-filter: blur(24px) saturate(180%) brightness(1.1) !important;
+      -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.1) !important;
+      border: 1px solid rgba(255,255,255,0.12) !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.2) !important;
+    }
+
     /* AUTH */
     #auth-screen {
       position: fixed; inset: 0; background: #0f0f1a;
       display: flex; align-items: center; justify-content: center; z-index: 9999;
     }
     .auth-box {
-      background: #1a1a2e; border-radius: 16px; padding: 40px;
+      background: rgba(26,26,46,0.55); border-radius: 16px; padding: 40px;
       width: 340px; box-shadow: 0 0 40px rgba(99,102,241,0.3);
+      backdrop-filter: blur(28px) saturate(180%) brightness(1.1);
+      -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(1.1);
+      border: 1px solid rgba(255,255,255,0.1);
     }
     .auth-box h1 { text-align: center; margin-bottom: 8px; font-size: 28px; }
     .auth-box p { text-align: center; color: #888; margin-bottom: 28px; font-size: 14px; }
@@ -51,9 +63,12 @@
     /* MAIN LAYOUT */
     #app { display: none; flex: 1; flex-direction: column; height: 100vh; }
     header {
-      background: #1a1a2e; padding: 12px 20px;
+      background: rgba(26,26,46,0.5); padding: 12px 20px;
       display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 1px solid #2a2a3e; z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,0.08); z-index: 100;
+      backdrop-filter: blur(24px) saturate(180%) brightness(1.1);
+      -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.1);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
     }
     header h2 { font-size: 20px; color: #6366f1; }
     .header-right { display: flex; align-items: center; gap: 12px; }
@@ -92,8 +107,11 @@
 
     /* SIDEBAR */
     #sidebar {
-      width: 300px; background: #1a1a2e; display: flex;
-      flex-direction: column; border-left: 1px solid #2a2a3e;
+      width: 300px; background: rgba(26,26,46,0.5); display: flex;
+      flex-direction: column; border-left: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(24px) saturate(180%) brightness(1.1);
+      -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.1);
+      box-shadow: -4px 0 24px rgba(0,0,0,0.3);
     }
     .tabs { display: flex; border-bottom: 1px solid #2a2a3e; }
     .tab {
@@ -156,7 +174,7 @@
     .msg.mine { background: #6366f1; align-self: flex-end; border-bottom-right-radius: 4px; }
     .msg.theirs { background: #2a2a3e; align-self: flex-start; border-bottom-left-radius: 4px; }
     .msg-sender { font-size: 11px; color: #aaa; margin-bottom: 3px; }
-    .chat-input { display: flex; gap: 8px; padding: 12px; border-top: 1px solid #2a2a3e; flex-shrink: 0; position: sticky; bottom: 0; background: #1a1a2e; z-index: 10; }
+    .chat-input { display: flex; gap: 8px; padding: 12px; border-top: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; position: sticky; bottom: 0; background: rgba(26,26,46,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 10; }
     .chat-input input {
       flex: 1; padding: 10px 14px; background: #0f0f1a;
       border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 14px; outline: none;
@@ -168,7 +186,7 @@
     }
     .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 9999; }
     .modal.show { display: flex; }
-    .modal-box { background: #1a1a2e; border-radius: 16px; padding: 24px; width: 90%; max-width: 400px; }
+    .modal-box { background: rgba(26,26,46,0.55); border-radius: 16px; padding: 24px; width: 90%; max-width: 400px; backdrop-filter: blur(28px) saturate(180%) brightness(1.1); -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(1.1); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 16px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15); }
     .modal-box h3 { margin-bottom: 16px; font-size: 18px; }
     .avatar-upload-area { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 16px; }
     .avatar-preview { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #6366f1; display: none; }
@@ -198,11 +216,81 @@
       margin-top: 8px; padding: 6px 16px; background: #6366f1;
       border: none; border-radius: 6px; color: #fff; cursor: pointer; font-size: 13px;
     }
+    .popup-route-btn {
+      margin-top: 4px; padding: 6px 16px; background: #f59e0b;
+      border: none; border-radius: 6px; color: #fff; cursor: pointer; font-size: 13px;
+    }
+    .popup-btn-row { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
+
+    /* STICKER MODAL */
+    .sticker-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 8px; margin-bottom: 16px; }
+    .sticker-opt { font-size: 24px; cursor: pointer; text-align: center; padding: 6px; border-radius: 8px; border: 2px solid transparent; transition: border-color 0.15s; }
+    .sticker-opt.selected { border-color: #6366f1; background: rgba(99,102,241,0.15); }
+    .sticker-note { width: 100%; padding: 9px 12px; background: #0f0f1a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 13px; outline: none; margin-bottom: 12px; resize: none; }
+    .sticker-note:focus { border-color: #6366f1; }
+    .map-sticker-marker { font-size: 28px; cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+    .friend-dist { font-size: 11px; color: #06b6d4; margin-left: 4px; }
 
     .leaflet-control-attribution { display: none !important; }
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+    /* ANIMATIONS */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.88); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(16px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-16px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes tabSlide {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-box { animation: fadeInUp 0.45s cubic-bezier(.22,.68,0,1.2) both; }
+
+    #app { animation: fadeIn 0.3s ease both; }
+
+    .modal-box { animation: scaleIn 0.25s cubic-bezier(.22,.68,0,1.2) both; }
+
+    .msg.mine  { animation: slideInRight 0.2s ease both; }
+    .msg.theirs { animation: slideInLeft 0.2s ease both; }
+
+    .friend-item { animation: fadeInUp 0.25s ease both; }
+
+    #tab-friends, #tab-chat { animation: tabSlide 0.2s ease both; }
+
+    .btn-primary, .btn-share, .btn-logout, .btn-chat-small, .btn-save, .btn-cancel, .btn-change-avatar, .popup-chat-btn {
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s;
+    }
+    .btn-primary:active, .btn-share:active, .btn-logout:active,
+    .btn-chat-small:active, .btn-save:active, .btn-cancel:active,
+    .btn-change-avatar:active, .popup-chat-btn:active {
+      transform: scale(0.95);
+    }
+    .btn-primary:hover, .btn-save:hover { box-shadow: 0 4px 16px rgba(99,102,241,0.4); }
+    .btn-share:hover { box-shadow: 0 4px 16px rgba(34,197,94,0.4); }
+
+    .tab { transition: color 0.2s, border-color 0.2s; }
+    .tab.active { animation: fadeIn 0.2s ease both; }
+
+    .btn-profile { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+    .btn-profile:hover { transform: scale(1.1); box-shadow: 0 0 0 3px rgba(99,102,241,0.4); }
 
     @media (max-width: 600px) {
       .auth-box { width: 92vw; padding: 28px 20px; }
@@ -255,6 +343,7 @@
     <div class="header-right">
       <button class="btn-profile" id="current-user-badge" title="Мой профиль"></button>
       <button class="btn-share" id="btn-share-location">📍 <span class="share-text">Поделиться локацией</span></button>
+      <button class="btn-share" id="btn-add-sticker" style="background:#a855f7">📌 <span class="share-text">Стикер</span></button>
       <button class="btn-logout" id="btn-logout">Выйти</button>
     </div>
   </header>
@@ -330,6 +419,19 @@
   </div>
 </div>
 
+<!-- STICKER MODAL -->
+<div class="modal" id="sticker-modal">
+  <div class="modal-box">
+    <h3>📌 Стикер на карте</h3>
+    <div class="sticker-grid" id="sticker-grid"></div>
+    <textarea class="sticker-note" id="sticker-note" placeholder="Заметка (необязательно)..." rows="2" maxlength="100"></textarea>
+    <div class="modal-buttons">
+      <button class="btn-cancel" id="btn-cancel-sticker">Отмена</button>
+      <button class="btn-save" id="btn-save-sticker">Поставить</button>
+    </div>
+  </div>
+</div>
+
 <!-- НЕХЕРА ВАШИ СКРИПТЫ -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script type="module">
@@ -360,9 +462,13 @@
   let currentUser = null;
   let friends = {};
   let markers = {};
+  let stickerMarkers = {};
   let chatWith = null;
   let chatUnsub = null;
   let selectedAvatar = null;
+  let routeLayer = null;
+  let myLat = null, myLng = null;
+  let friendLocations = {};
 
   // ── MAP ──────────────────────────────────────────────────────────
   const map = L.map('map', { zoomControl: true }).setView([20, 0], 2);
@@ -409,10 +515,15 @@
 
   async function placeMarker(username, lat, lng, updatedAt) {
     const timeStr = updatedAt ? new Date(updatedAt).toLocaleTimeString('ru') : '';
+    const isFriend = username !== currentUser;
+    const routeBtn = isFriend ? `<button class="popup-route-btn" onclick="window.buildRoute('${username}')">🗺 Маршрут</button>` : '';
     const popupHtml = `<div class="popup-content">
       <strong>${username}</strong>
       <small>${timeStr ? 'Обновлено: ' + timeStr : ''}</small>
-      <br><button class="popup-chat-btn" onclick="window.openChatWith('${username}')">💬 Написать</button>
+      <div class="popup-btn-row">
+        <button class="popup-chat-btn" onclick="window.openChatWith('${username}')">💬 Написать</button>
+        ${routeBtn}
+      </div>
     </div>`;
     const avatar = await getAvatar(username);
     if (markers[username]) {
@@ -481,6 +592,7 @@
     document.getElementById('app').style.display = 'flex';
     document.getElementById('current-user-badge').textContent = '👤';
     loadFriends();
+    loadStickers();
     map.invalidateSize();
     getAvatar(currentUser).then(updateProfileBtn);
     requestNotifPermission();
@@ -491,6 +603,7 @@
     navigator.geolocation.getCurrentPosition(
       pos => {
         const { latitude: lat, longitude: lng } = pos.coords;
+        myLat = lat; myLng = lng;
         map.setView([lat, lng], 13);
         set(ref(db, `locations/${currentUser}`), { lat, lng, updatedAt: Date.now() });
         placeMarker(currentUser, lat, lng, Date.now());
@@ -514,9 +627,11 @@
   function shareLocation() {
     navigator.geolocation.getCurrentPosition(pos => {
       const { latitude: lat, longitude: lng } = pos.coords;
+      myLat = lat; myLng = lng;
       set(ref(db, `locations/${currentUser}`), { lat, lng, updatedAt: Date.now() });
       placeMarker(currentUser, lat, lng, Date.now());
       map.setView([lat, lng], 13);
+      updateAllDistances();
     }, err => {
       const codes = { 1: 'Доступ запрещён', 2: 'Позиция недоступна', 3: 'Таймаут' };
       alert('Ошибка: ' + (codes[err.code] || err.message));
@@ -572,12 +687,15 @@
     for (const name of names) {
       const color = colorFor(name);
       const avatar = await getAvatar(name);
+      const dist = calcDistance(name);
+      const distHtml = dist !== null ? `<span class="friend-dist">${formatDist(dist)}</span>` : '';
       const div = document.createElement('div');
       div.className = 'friend-item';
+      div.style.animationDelay = `${names.indexOf(name) * 0.05}s`;
       div.innerHTML = `
         <div class="friend-avatar" style="background:${avatar ? 'transparent' : color}">${avatar ? `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" />` : name[0].toUpperCase()}</div>
         <div class="friend-info">
-          <div class="friend-name">${name}</div>
+          <div class="friend-name">${name}${distHtml}</div>
           <div class="friend-status" id="status-${name}">нет данных</div>
         </div>
         <div class="online-dot offline-dot" id="dot-${name}"></div>
@@ -612,19 +730,29 @@
     if (watchedFriends.has(name)) return;
     watchedFriends.add(name);
     watchFriendChat(name);
+    let wasOnline = false;
     onValue(ref(db, `locations/${name}`), snap => {
       const dotEl = document.getElementById(`dot-${name}`);
       const statusEl = document.getElementById(`status-${name}`);
       if (snap.exists()) {
         const { lat, lng, updatedAt } = snap.val();
+        friendLocations[name] = { lat, lng };
         placeMarker(name, lat, lng, updatedAt);
         const timeStr = new Date(updatedAt).toLocaleTimeString('ru');
-        if (statusEl) statusEl.textContent = `📍 ${timeStr}`;
-        if (dotEl) { dotEl.classList.remove('offline-dot'); }
+        const dist = calcDistance(name);
+        const distStr = dist !== null ? ` · ${formatDist(dist)}` : '';
+        if (statusEl) statusEl.textContent = `📍 ${timeStr}${distStr}`;
+        if (dotEl) dotEl.classList.remove('offline-dot');
+        if (!wasOnline) {
+          wasOnline = true;
+          showNotif(name, '🟢 Появился онлайн', true);
+        }
       } else {
+        delete friendLocations[name];
         removeMarker(name);
         if (statusEl) statusEl.textContent = 'нет данных';
         if (dotEl) dotEl.classList.add('offline-dot');
+        wasOnline = false;
       }
     });
   }
@@ -651,9 +779,10 @@
         container.innerHTML = '<div class="empty-state">Начните общение!</div>';
         return;
       }
-      Object.values(snap.val()).forEach(msg => {
+      Object.values(snap.val()).forEach((msg, idx) => {
         const div = document.createElement('div');
         div.className = 'msg ' + (msg.from === currentUser ? 'mine' : 'theirs');
+        div.style.animationDelay = `${Math.min(idx * 0.04, 0.3)}s`;
         div.innerHTML = msg.from !== currentUser
           ? `<div class="msg-sender">${msg.from}</div>${escHtml(msg.text)}`
           : escHtml(msg.text);
@@ -794,10 +923,118 @@
     if (Notification.permission === 'default') await Notification.requestPermission();
   }
 
-  function showNotif(from, text) {
-    if (document.visibilityState === 'visible' && chatWith === from) return;
+  function showNotif(from, text, isOnline = false) {
+    if (!isOnline && document.visibilityState === 'visible' && chatWith === from) return;
     if (Notification.permission !== 'granted') return;
-    new Notification('💬 ' + from, { body: text, icon: 'img/stikers.png' });
+    new Notification((isOnline ? '🟢 ' : '💬 ') + from, { body: text, icon: 'img/stikers.png' });
+  }
+
+  // ── DISTANCE ─────────────────────────────────────────────────────
+  function calcDistance(name) {
+    if (myLat === null || !friendLocations[name]) return null;
+    const R = 6371;
+    const dLat = (friendLocations[name].lat - myLat) * Math.PI / 180;
+    const dLng = (friendLocations[name].lng - myLng) * Math.PI / 180;
+    const a = Math.sin(dLat/2)**2 + Math.cos(myLat*Math.PI/180) * Math.cos(friendLocations[name].lat*Math.PI/180) * Math.sin(dLng/2)**2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  }
+
+  function formatDist(km) {
+    return km < 1 ? Math.round(km * 1000) + ' м' : km.toFixed(1) + ' км';
+  }
+
+  function updateAllDistances() {
+    Object.keys(friends).forEach(name => {
+      const statusEl = document.getElementById(`status-${name}`);
+      if (!statusEl) return;
+      const dist = calcDistance(name);
+      if (dist !== null) {
+        const cur = statusEl.textContent;
+        const base = cur.replace(/ · .*$/, '');
+        statusEl.textContent = `${base} · ${formatDist(dist)}`;
+      }
+    });
+  }
+
+  // ── ROUTE ────────────────────────────────────────────────────────
+  window.buildRoute = async name => {
+    if (myLat === null) { alert('Сначала поделись своей локацией'); return; }
+    const loc = friendLocations[name];
+    if (!loc) { alert('Локация друга недоступна'); return; }
+    if (routeLayer) { map.removeLayer(routeLayer); routeLayer = null; }
+    try {
+      const url = `https://router.project-osrm.org/route/v1/driving/${myLng},${myLat};${loc.lng},${loc.lat}?overview=full&geometries=geojson`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.code !== 'Ok') throw new Error();
+      const coords = data.routes[0].geometry.coordinates.map(([lng, lat]) => [lat, lng]);
+      const dist = (data.routes[0].distance / 1000).toFixed(1);
+      const dur = Math.round(data.routes[0].duration / 60);
+      routeLayer = L.polyline(coords, { color: '#f59e0b', weight: 4, opacity: 0.85, dashArray: '8,4' }).addTo(map);
+      map.fitBounds(routeLayer.getBounds(), { padding: [40, 40] });
+      routeLayer.bindPopup(`🗺 До ${name}: ${dist} км · ~${dur} мин`).openPopup();
+    } catch { alert('Не удалось построить маршрут'); }
+  };
+
+  // ── STICKERS ─────────────────────────────────────────────────────
+  const STICKERS = ['📌','⭐','🔥','❤️','😂','🎉','🏠','🍕','☕','🌊','🌲','🏔','🎵','💡','⚠️','🚀'];
+  let pendingStickerLatLng = null;
+  let selectedSticker = STICKERS[0];
+
+  const grid = document.getElementById('sticker-grid');
+  STICKERS.forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'sticker-opt' + (s === selectedSticker ? ' selected' : '');
+    el.textContent = s;
+    el.onclick = () => {
+      selectedSticker = s;
+      grid.querySelectorAll('.sticker-opt').forEach(x => x.classList.remove('selected'));
+      el.classList.add('selected');
+    };
+    grid.appendChild(el);
+  });
+
+  document.getElementById('btn-add-sticker').onclick = () => {
+    alert('Кликни на карту, чтобы поставить стикер');
+    map.once('click', e => {
+      pendingStickerLatLng = e.latlng;
+      document.getElementById('sticker-note').value = '';
+      document.getElementById('sticker-modal').classList.add('show');
+    });
+  };
+
+  document.getElementById('btn-cancel-sticker').onclick = () => {
+    document.getElementById('sticker-modal').classList.remove('show');
+    pendingStickerLatLng = null;
+  };
+
+  document.getElementById('btn-save-sticker').onclick = async () => {
+    if (!pendingStickerLatLng) return;
+    const note = document.getElementById('sticker-note').value.trim();
+    const { lat, lng } = pendingStickerLatLng;
+    const id = await push(ref(db, 'stickers'), {
+      emoji: selectedSticker, note, lat, lng,
+      author: currentUser, ts: Date.now()
+    });
+    document.getElementById('sticker-modal').classList.remove('show');
+    pendingStickerLatLng = null;
+  };
+
+  function loadStickers() {
+    onValue(ref(db, 'stickers'), snap => {
+      Object.values(stickerMarkers).forEach(m => map.removeLayer(m));
+      stickerMarkers = {};
+      if (!snap.exists()) return;
+      Object.entries(snap.val()).forEach(([id, s]) => {
+        const icon = L.divIcon({
+          className: '',
+          html: `<div class="map-sticker-marker">${s.emoji}</div>`,
+          iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -20]
+        });
+        const popup = `<div class="popup-content"><strong>${s.emoji}</strong>${s.note ? `<br><small>${escHtml(s.note)}</small>` : ''}<br><small style="color:#888">${s.author}</small></div>`;
+        stickerMarkers[id] = L.marker([s.lat, s.lng], { icon }).addTo(map).bindPopup(popup);
+      });
+    });
   }
 
   // ── AUTO LOGIN ───────────────────────────────────────────────────
