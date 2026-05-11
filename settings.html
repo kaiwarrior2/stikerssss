@@ -1,0 +1,158 @@
+<!-- SETTINGS MODAL -->
+<div class="modal" id="settings-modal">
+  <div class="modal-box" style="max-width:500px;max-height:80vh;overflow-y:auto">
+    <h3>⚙️ Настройки</h3>
+    
+    <div style="margin-bottom:20px">
+      <h4 style="font-size:14px;color:#aaa;margin-bottom:12px">🎨 Тема карты</h4>
+      <select id="settings-map-theme" style="width:100%;padding:10px;background:rgba(15,15,26,0.6);border:2px solid rgba(99,102,241,0.2);border-radius:10px;color:#fff;outline:none">
+        <option value="light">Светлая</option>
+        <option value="dark">Тёмная</option>
+        <option value="satellite">Спутник</option>
+      </select>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <h4 style="font-size:14px;color:#aaa;margin-bottom:12px">🔔 Уведомления</h4>
+      <div class="privacy-row">
+        <span>Звук сообщений</span>
+        <label class="toggle-switch"><input type="checkbox" id="settings-sound" checked /><span class="toggle-slider"></span></label>
+      </div>
+      <div class="privacy-row">
+        <span>Уведомления о локации</span>
+        <label class="toggle-switch"><input type="checkbox" id="settings-notif-location" checked /><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <h4 style="font-size:14px;color:#aaa;margin-bottom:12px">📍 Локация</h4>
+      <div class="privacy-row">
+        <span>Авто-обновление</span>
+        <select id="settings-auto-update" style="background:#0f0f1a;border:1px solid #333;border-radius:6px;color:#fff;padding:4px 8px;font-size:12px">
+          <option value="0">Выкл</option>
+          <option value="30">30 сек</option>
+          <option value="60">1 мин</option>
+          <option value="300">5 мин</option>
+        </select>
+      </div>
+      <div class="privacy-row">
+        <span>Точность GPS</span>
+        <label class="toggle-switch"><input type="checkbox" id="settings-high-accuracy" checked /><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <h4 style="font-size:14px;color:#aaa;margin-bottom:12px">💬 Чат</h4>
+      <div class="privacy-row">
+        <span>Показывать "печатает"</span>
+        <label class="toggle-switch"><input type="checkbox" id="settings-typing" checked /><span class="toggle-slider"></span></label>
+      </div>
+      <div class="privacy-row">
+        <span>Автоудаление через</span>
+        <select id="settings-auto-delete" style="background:#0f0f1a;border:1px solid #333;border-radius:6px;color:#fff;padding:4px 8px;font-size:12px">
+          <option value="0">Никогда</option>
+          <option value="24">24 часа</option>
+          <option value="168">7 дней</option>
+          <option value="720">30 дней</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <h4 style="font-size:14px;color:#aaa;margin-bottom:12px">🗺️ Карта</h4>
+      <div class="privacy-row">
+        <span>Показывать стикеры</span>
+        <label class="toggle-switch"><input type="checkbox" id="settings-show-stickers" checked /><span class="toggle-slider"></span></label>
+      </div>
+      <div class="privacy-row">
+        <span>Показывать геозоны</span>
+        <label class="toggle-switch"><input type="checkbox" id="settings-show-geofences" checked /><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <div class="modal-buttons">
+      <button class="btn-cancel" id="btn-close-settings">Закрыть</button>
+      <button class="btn-save" id="btn-save-settings">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let appSettings = {
+    mapTheme: 'light',
+    sound: true,
+    notifLocation: true,
+    autoUpdate: 0,
+    highAccuracy: true,
+    typing: true,
+    autoDelete: 0,
+    showStickers: true,
+    showGeofences: true
+  };
+
+  function loadSettings() {
+    const saved = localStorage.getItem('fm_settings');
+    if (saved) appSettings = { ...appSettings, ...JSON.parse(saved) };
+    applySettings();
+  }
+
+  function applySettings() {
+    document.getElementById('settings-map-theme').value = appSettings.mapTheme;
+    document.getElementById('settings-sound').checked = appSettings.sound;
+    document.getElementById('settings-notif-location').checked = appSettings.notifLocation;
+    document.getElementById('settings-auto-update').value = appSettings.autoUpdate;
+    document.getElementById('settings-high-accuracy').checked = appSettings.highAccuracy;
+    document.getElementById('settings-typing').checked = appSettings.typing;
+    document.getElementById('settings-auto-delete').value = appSettings.autoDelete;
+    document.getElementById('settings-show-stickers').checked = appSettings.showStickers;
+    document.getElementById('settings-show-geofences').checked = appSettings.showGeofences;
+    
+    updateMapTheme();
+    toggleStickers();
+    toggleGeofences();
+  }
+
+  function updateMapTheme() {
+    const tiles = {
+      light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+      dark: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      satellite: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+    };
+    map.eachLayer(layer => { if (layer._url) map.removeLayer(layer); });
+    L.tileLayer(tiles[appSettings.mapTheme] || tiles.light, { maxZoom: 19 }).addTo(map);
+  }
+
+  function toggleStickers() {
+    Object.values(stickerMarkers).forEach(m => {
+      appSettings.showStickers ? m.addTo(map) : map.removeLayer(m);
+    });
+  }
+
+  function toggleGeofences() {
+    Object.values(geofenceCircles).forEach(c => {
+      appSettings.showGeofences ? c.addTo(map) : map.removeLayer(c);
+    });
+  }
+
+  document.getElementById('btn-close-settings').onclick = () => {
+    document.getElementById('settings-modal').classList.remove('show');
+  };
+
+  document.getElementById('btn-save-settings').onclick = () => {
+    appSettings.mapTheme = document.getElementById('settings-map-theme').value;
+    appSettings.sound = document.getElementById('settings-sound').checked;
+    appSettings.notifLocation = document.getElementById('settings-notif-location').checked;
+    appSettings.autoUpdate = parseInt(document.getElementById('settings-auto-update').value);
+    appSettings.highAccuracy = document.getElementById('settings-high-accuracy').checked;
+    appSettings.typing = document.getElementById('settings-typing').checked;
+    appSettings.autoDelete = parseInt(document.getElementById('settings-auto-delete').value);
+    appSettings.showStickers = document.getElementById('settings-show-stickers').checked;
+    appSettings.showGeofences = document.getElementById('settings-show-geofences').checked;
+    
+    localStorage.setItem('fm_settings', JSON.stringify(appSettings));
+    applySettings();
+    document.getElementById('settings-modal').classList.remove('show');
+  };
+
+  window.addEventListener('load', loadSettings);
+</script>

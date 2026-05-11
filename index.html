@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
   <title>Stikers</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="panel.css" />
   <style>
     @font-face {
       font-family: 'Mulish';
@@ -21,13 +22,33 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
       font-family: 'Mulish', 'Segoe UI', sans-serif; 
-      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
-      background-attachment: fixed;
+      background: #0a0a12;
       color: #fff; 
       height: 100vh; 
       display: flex; 
-      flex-direction: column; 
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
     }
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 20% 50%, rgba(99,102,241,0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(236,72,153,0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 40% 20%, rgba(139,92,246,0.1) 0%, transparent 50%);
+      animation: float 30s ease-in-out infinite;
+      z-index: 0;
+    }
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(30px, -30px) rotate(120deg); }
+      66% { transform: translate(-20px, 20px) rotate(240deg); }
+    }
+    body > * { position: relative; z-index: 1; }
 
     /* LIQUID GLASS */
     .liquid-glass {
@@ -40,8 +61,24 @@
 
     /* AUTH */
     #auth-screen {
-      position: fixed; inset: 0; background: #0f0f1a;
+      position: fixed; inset: 0; 
+      background: radial-gradient(circle at center, rgba(15,15,26,0.95) 0%, rgba(10,10,18,0.98) 100%);
       display: flex; align-items: center; justify-content: center; z-index: 9999;
+      backdrop-filter: blur(10px);
+    }
+    #auth-screen::before {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(99,102,241,0.3) 0%, transparent 70%);
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: pulse-bg 8s ease-in-out infinite;
+    }
+    @keyframes pulse-bg {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.2); opacity: 0.8; }
     }
     .auth-box {
       background: linear-gradient(135deg, rgba(26,26,46,0.7) 0%, rgba(30,30,60,0.6) 100%);
@@ -69,14 +106,50 @@
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
-    .auth-box h1 { text-align: center; margin-bottom: 8px; font-size: 28px; }
-    .auth-box p { text-align: center; color: #888; margin-bottom: 28px; font-size: 14px; }
-    .auth-box input {
-      width: 100%; padding: 12px 16px; margin-bottom: 12px;
-      background: #0f0f1a; border: 1px solid #333; border-radius: 10px;
-      color: #fff; font-size: 15px; outline: none;
+    .auth-box h1 { 
+      text-align: center; 
+      margin-bottom: 8px; 
+      font-size: 32px;
+      background: linear-gradient(135deg, #6366f1 0%, #ec4899 50%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+      letter-spacing: -1px;
+      position: relative;
+      z-index: 1;
     }
-    .auth-box input:focus { border-color: #6366f1; }
+    .auth-box p { 
+      text-align: center; 
+      color: #aaa; 
+      margin-bottom: 28px; 
+      font-size: 14px;
+      position: relative;
+      z-index: 1;
+    }
+    .auth-box input {
+      width: 100%; 
+      padding: 14px 18px; 
+      margin-bottom: 14px;
+      background: rgba(15,15,26,0.6);
+      border: 2px solid rgba(99,102,241,0.2);
+      border-radius: 12px;
+      color: #fff; 
+      font-size: 15px; 
+      outline: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      z-index: 1;
+    }
+    .auth-box input:focus { 
+      border-color: #6366f1;
+      background: rgba(15,15,26,0.8);
+      box-shadow: 0 0 0 4px rgba(99,102,241,0.1), 0 4px 20px rgba(99,102,241,0.2);
+      transform: translateY(-2px);
+    }
+    .auth-box input::placeholder {
+      color: #666;
+    }
     .btn-primary {
       width: 100%; 
       padding: 13px; 
@@ -145,10 +218,42 @@
     }
     .header-right { display: flex; align-items: center; gap: 12px; }
     .btn-profile {
-      width: 36px; height: 36px; border-radius: 50%; border: 2px solid #6366f1;
-      background: #6366f1; cursor: pointer; font-size: 18px;
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden; flex-shrink: 0; padding: 0;
+      width: 40px; 
+      height: 40px; 
+      border-radius: 50%; 
+      border: 2px solid transparent;
+      background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+      cursor: pointer; 
+      font-size: 18px;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      overflow: hidden; 
+      flex-shrink: 0; 
+      padding: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(99,102,241,0.4);
+      position: relative;
+    }
+    .btn-profile::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      padding: 2px;
+      background: linear-gradient(135deg, #6366f1, #ec4899, #8b5cf6);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .btn-profile:hover::before {
+      opacity: 1;
+    }
+    .btn-profile:hover {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 6px 20px rgba(99,102,241,0.6);
     }
     .btn-profile img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
     .btn-share {
@@ -196,7 +301,134 @@
     .main-content { display: flex; flex: 1; overflow: hidden; }
 
     /* MAP */
-    #map { flex: 1; }
+    #map { flex: 1; position: relative; }
+
+    /* SEARCH */
+    .search-container {
+      position: absolute;
+      top: 10px;
+      left: 50px;
+      z-index: 1000;
+      width: calc(100% - 60px);
+      max-width: 350px;
+    }
+    #search-address {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(26,26,46,0.9);
+      border: 2px solid rgba(99,102,241,0.3);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+    #search-address:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+    }
+    #search-address::placeholder { color: #666; }
+    #search-results {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(26,26,46,0.95);
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 0 0 12px 12px;
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+      backdrop-filter: blur(10px);
+    }
+    #search-results.show { display: block; }
+    .search-result-item {
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: background 0.2s;
+    }
+    .search-result-item:last-child { border-bottom: none; }
+    .search-result-item:hover { background: rgba(99,102,241,0.2); }
+    .search-result-item .name { font-size: 14px; color: #fff; }
+    .search-result-item .addr { font-size: 12px; color: #888; margin-top: 2px; }
+
+    /* FAVORITES */
+    .favorites-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 1000;
+    }
+    .btn-favorites {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(26,26,46,0.9);
+      border: 2px solid rgba(99,102,241,0.3);
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+    .btn-favorites:hover {
+      border-color: #6366f1;
+      transform: scale(1.1);
+    }
+    .favorites-list {
+      position: absolute;
+      top: 55px;
+      right: 0;
+      width: 280px;
+      max-height: 400px;
+      overflow-y: auto;
+      background: rgba(26,26,46,0.95);
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 12px;
+      display: none;
+      backdrop-filter: blur(10px);
+    }
+    .favorites-list.show { display: block; }
+    .favorite-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .favorite-item:last-child { border-bottom: none; }
+    .favorite-item:hover { background: rgba(99,102,241,0.2); }
+    .favorite-item .name { font-size: 14px; color: #fff; }
+    .favorite-item .addr { font-size: 11px; color: #888; margin-top: 2px; }
+    .favorite-item .btn-remove-fav {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #f87171;
+      cursor: pointer;
+      font-size: 14px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .favorite-item:hover .btn-remove-fav { opacity: 1; }
+    .popup-fav-btn {
+      margin-top: 4px;
+      padding: 6px 16px;
+      background: #ec4899;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 13px;
+    }
 
     /* SIDEBAR */
     #sidebar {
@@ -209,24 +441,81 @@
       -webkit-backdrop-filter: blur(28px) saturate(200%) brightness(1.15);
       box-shadow: -8px 0 32px rgba(0,0,0,0.4), inset 1px 0 0 rgba(255,255,255,0.1);
     }
-    .tabs { display: flex; border-bottom: 1px solid #2a2a3e; }
-    .tab {
-      flex: 1; padding: 14px; text-align: center; cursor: pointer;
-      font-size: 14px; color: #888; transition: all 0.2s;
+    .tabs { 
+      display: flex; 
+      border-bottom: 2px solid rgba(99,102,241,0.1);
+      background: rgba(15,15,26,0.3);
+      position: relative;
     }
-    .tab.active { color: #6366f1; border-bottom: 2px solid #6366f1; }
+    .tabs::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 50%;
+      height: 2px;
+      background: linear-gradient(90deg, #6366f1 0%, #ec4899 100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateX(0);
+    }
+    .tabs.chat-active::after {
+      transform: translateX(100%);
+    }
+    .tab {
+      flex: 1; 
+      padding: 16px; 
+      text-align: center; 
+      cursor: pointer;
+      font-size: 14px; 
+      font-weight: 600;
+      color: #666;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      z-index: 1;
+    }
+    .tab:hover {
+      color: #aaa;
+      background: rgba(99,102,241,0.05);
+    }
+    .tab.active { 
+      color: #fff;
+      text-shadow: 0 0 20px rgba(99,102,241,0.5);
+    }
 
     /* FRIENDS TAB */
     #tab-friends { flex: 1; overflow-y: auto; padding: 12px; }
     .add-friend { display: flex; gap: 8px; margin-bottom: 12px; }
     .add-friend input {
-      flex: 1; padding: 9px 12px; background: #0f0f1a;
-      border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 13px; outline: none;
+      flex: 1; 
+      padding: 11px 14px; 
+      background: rgba(15,15,26,0.6);
+      border: 2px solid rgba(99,102,241,0.2);
+      border-radius: 10px; 
+      color: #fff; 
+      font-size: 13px; 
+      outline: none;
+      transition: all 0.3s;
     }
-    .add-friend input:focus { border-color: #6366f1; }
+    .add-friend input:focus { 
+      border-color: #6366f1;
+      background: rgba(15,15,26,0.8);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+    }
     .add-friend button {
-      padding: 9px 14px; background: #6366f1; border: none;
-      border-radius: 8px; color: #fff; cursor: pointer; font-size: 13px;
+      padding: 11px 18px; 
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      border: none;
+      border-radius: 10px; 
+      color: #fff; 
+      cursor: pointer; 
+      font-size: 16px;
+      font-weight: 700;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(99,102,241,0.3);
+    }
+    .add-friend button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(99,102,241,0.5);
     }
     .friend-item {
       display: flex; 
@@ -255,10 +544,23 @@
     .friend-name { font-size: 14px; font-weight: 600; }
     .friend-status { font-size: 12px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .online-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #22c55e; flex-shrink: 0;
+      width: 10px; 
+      height: 10px; 
+      border-radius: 50%;
+      background: #22c55e;
+      flex-shrink: 0;
+      box-shadow: 0 0 10px rgba(34,197,94,0.6);
+      animation: pulse-dot 2s infinite;
     }
-    .offline-dot { background: #555; }
+    @keyframes pulse-dot {
+      0%, 100% { box-shadow: 0 0 10px rgba(34,197,94,0.6); }
+      50% { box-shadow: 0 0 20px rgba(34,197,94,0.9); }
+    }
+    .offline-dot { 
+      background: #555;
+      box-shadow: none;
+      animation: none;
+    }
     .btn-chat-small {
       background: #6366f1; border: none; border-radius: 6px;
       padding: 5px 10px; color: #fff; cursor: pointer; font-size: 12px;
@@ -267,40 +569,175 @@
     /* CHAT TAB */
     #tab-chat { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
     .chat-header {
-      padding: 12px 16px; border-bottom: 1px solid #2a2a3e;
-      font-size: 14px; color: #888;
+      padding: 14px 16px;
+      background: rgba(15,15,26,0.8);
+      border-bottom: 1px solid rgba(99,102,241,0.2);
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .chat-header span { color: #6366f1; font-weight: 600; }
+    .chat-header-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .chat-header-info { flex: 1; }
+    .chat-header-name { font-size: 15px; font-weight: 600; }
+    .chat-header-status { font-size: 12px; color: #888; margin-top: 2px; }
     #messages {
-      flex: 1; overflow-y: auto; padding: 12px;
-      display: flex; flex-direction: column; gap: 8px;
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: rgba(10,10,18,0.5);
+    }
+    .msg-wrap {
+      display: flex;
+      flex-direction: column;
+      max-width: 70%;
+      margin-bottom: 4px;
+    }
+    .msg-wrap.mine {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+    .msg-wrap.theirs {
+      align-self: flex-start;
+      align-items: flex-start;
     }
     .msg {
-      max-width: 85%; padding: 9px 13px; border-radius: 12px;
-      font-size: 13px; line-height: 1.4; word-break: break-word;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+      position: relative;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
-    .msg.mine { 
-      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-      align-self: flex-end; 
+    .msg-wrap.mine .msg {
+      background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
       border-bottom-right-radius: 4px;
-      box-shadow: 0 2px 8px rgba(99,102,241,0.3);
+      color: #fff;
     }
-    .msg.theirs { 
-      background: linear-gradient(135deg, rgba(42,42,62,0.9) 0%, rgba(50,50,80,0.8) 100%);
-      align-self: flex-start; 
+    .msg-wrap.theirs .msg {
+      background: rgba(42,42,62,0.95);
       border-bottom-left-radius: 4px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      color: #fff;
     }
-    .msg-sender { font-size: 11px; color: #aaa; margin-bottom: 3px; }
-    .chat-input { display: flex; gap: 8px; padding: 12px; border-top: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; position: sticky; bottom: 0; background: rgba(26,26,46,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 10; }
+    .msg-sender {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6366f1;
+      margin-bottom: 4px;
+    }
+    .msg-time {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .msg-wrap.mine .msg-time {
+      justify-content: flex-end;
+    }
+    .msg-ticks {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+    }
+    .msg-ticks.read {
+      color: #22c55e;
+    }
+    .chat-input {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      border-top: 1px solid rgba(99,102,241,0.2);
+      background: rgba(15,15,26,0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      flex-shrink: 0;
+    }
+    .chat-input-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(42,42,62,0.6);
+      border: 2px solid rgba(99,102,241,0.2);
+      border-radius: 24px;
+      padding: 8px 16px;
+      transition: all 0.3s;
+    }
+    .chat-input-wrapper:focus-within {
+      border-color: #6366f1;
+      background: rgba(42,42,62,0.8);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+    }
     .chat-input input {
-      flex: 1; padding: 10px 14px; background: #0f0f1a;
-      border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 14px; outline: none;
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      padding: 0;
     }
-    .chat-input input:focus { border-color: #6366f1; }
-    .chat-input button {
-      padding: 10px 16px; background: #6366f1; border: none;
-      border-radius: 10px; color: #fff; cursor: pointer; font-size: 18px;
+    .chat-input input::placeholder {
+      color: #666;
+    }
+    .btn-attach {
+      background: transparent;
+      border: none;
+      color: #888;
+      cursor: pointer;
+      font-size: 20px;
+      padding: 0;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      border-radius: 50%;
+    }
+    .btn-attach:hover {
+      background: rgba(99,102,241,0.2);
+      color: #6366f1;
+    }
+    .btn-send-msg {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(99,102,241,0.4);
+      flex-shrink: 0;
+    }
+    .btn-send-msg:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(99,102,241,0.6);
+    }
+    .btn-send-msg:active {
+      transform: scale(0.95);
     }
     .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 9999; }
     .modal.show { display: flex; }
@@ -322,8 +759,27 @@
     .avatar-upload-label:hover { border-color: #6366f1; color: #fff; }
     .modal-buttons { display: flex; gap: 8px; }
     .modal-buttons button { flex: 1; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; }
-    .btn-cancel { background: #333; color: #fff; }
-    .btn-save { background: #6366f1; color: #fff; }
+    .btn-cancel { 
+      background: rgba(51,51,51,0.6);
+      color: #aaa;
+      border: 1px solid rgba(99,102,241,0.2);
+      transition: all 0.3s;
+    }
+    .btn-cancel:hover {
+      background: rgba(51,51,51,0.8);
+      color: #fff;
+      border-color: #666;
+    }
+    .btn-save { 
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(99,102,241,0.4);
+      transition: all 0.3s;
+    }
+    .btn-save:hover {
+      box-shadow: 0 6px 25px rgba(99,102,241,0.6);
+      transform: translateY(-2px);
+    }
 
     .profile-header { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px; }
     .profile-avatar { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; flex-shrink: 0; overflow: hidden; }
@@ -332,7 +788,16 @@
     .profile-meta { font-size: 13px; color: #888; }
     .btn-change-avatar { background: #6366f1; border: none; border-radius: 8px; padding: 8px 18px; color: #fff; cursor: pointer; font-size: 13px; margin-top: 4px; }
 
-    .empty-state { text-align: center; color: #555; padding: 30px 20px; font-size: 14px; }
+    .empty-state { 
+      text-align: center; 
+      color: #666; 
+      padding: 40px 20px; 
+      font-size: 14px;
+      background: linear-gradient(135deg, rgba(99,102,241,0.03) 0%, rgba(236,72,153,0.03) 100%);
+      border-radius: 12px;
+      margin: 20px 0;
+      border: 1px dashed rgba(99,102,241,0.2);
+    }
 
     /* POPUP */
     .leaflet-popup-content-wrapper { background: #1a1a2e; color: #fff; border: 1px solid #333; }
@@ -354,30 +819,81 @@
     .sticker-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 8px; margin-bottom: 16px; }
     .sticker-opt { font-size: 24px; cursor: pointer; text-align: center; padding: 6px; border-radius: 8px; border: 2px solid transparent; transition: border-color 0.15s; }
     .sticker-opt.selected { border-color: #6366f1; background: rgba(99,102,241,0.15); }
-    .sticker-note { width: 100%; padding: 9px 12px; background: #0f0f1a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 13px; outline: none; margin-bottom: 12px; resize: none; }
-    .sticker-note:focus { border-color: #6366f1; }
+    .sticker-note { 
+      width: 100%; 
+      padding: 12px 14px; 
+      background: rgba(15,15,26,0.6);
+      border: 2px solid rgba(99,102,241,0.2);
+      border-radius: 10px; 
+      color: #fff; 
+      font-size: 13px; 
+      outline: none; 
+      margin-bottom: 12px; 
+      resize: none;
+      transition: all 0.3s;
+      font-family: 'Mulish', sans-serif;
+    }
+    .sticker-note:focus { 
+      border-color: #6366f1;
+      background: rgba(15,15,26,0.8);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+    }
     .map-sticker-marker { font-size: 28px; cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
     .friend-dist { font-size: 11px; color: #06b6d4; margin-left: 4px; }
 
     /* FRIEND ACTIONS */
     .friend-actions { display: flex; gap: 4px; flex-shrink: 0; }
-    .btn-icon { background: transparent; border: 1px solid #333; border-radius: 6px; padding: 4px 7px; color: #aaa; cursor: pointer; font-size: 13px; transition: all 0.15s; }
-    .btn-icon:hover { border-color: #6366f1; color: #fff; }
-    .btn-icon.danger:hover { border-color: #f87171; color: #f87171; }
-    .friend-search { width: 100%; padding: 8px 12px; background: #0f0f1a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 13px; outline: none; margin-bottom: 10px; }
-    .friend-search:focus { border-color: #6366f1; }
+    .btn-icon { 
+      background: rgba(15,15,26,0.4);
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 8px; 
+      padding: 6px 9px; 
+      color: #aaa; 
+      cursor: pointer; 
+      font-size: 13px; 
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-icon:hover { 
+      border-color: #6366f1;
+      background: rgba(99,102,241,0.15);
+      color: #fff;
+      transform: scale(1.1);
+    }
+    .btn-icon.danger:hover { 
+      border-color: #f87171;
+      background: rgba(248,113,113,0.15);
+      color: #f87171;
+    }
+    .friend-search { 
+      width: 100%; 
+      padding: 10px 14px; 
+      background: rgba(15,15,26,0.6);
+      border: 2px solid rgba(99,102,241,0.2);
+      border-radius: 10px; 
+      color: #fff; 
+      font-size: 13px; 
+      outline: none; 
+      margin-bottom: 12px;
+      transition: all 0.3s;
+    }
+    .friend-search:focus { 
+      border-color: #6366f1;
+      background: rgba(15,15,26,0.8);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+    }
 
     /* CHAT ENHANCEMENTS */
-    .msg-wrap { display: flex; flex-direction: column; max-width: 85%; }
-    .msg-wrap.mine { align-self: flex-end; align-items: flex-end; }
-    .msg-wrap.theirs { align-self: flex-start; align-items: flex-start; }
-    .msg { max-width: 100%; position: relative; }
-    .msg-wrap.mine .msg { background: #6366f1; border-bottom-right-radius: 4px; }
-    .msg-wrap.theirs .msg { background: #2a2a3e; border-bottom-left-radius: 4px; }
-    .msg-meta { display: flex; align-items: center; gap: 6px; margin-top: 3px; font-size: 11px; color: #555; }
-    .msg-wrap.mine .msg-meta { justify-content: flex-end; }
-    .msg-ticks { color: #888; font-size: 12px; }
-    .msg-ticks.read { color: #6366f1; }
+    .msg-date-divider {
+      text-align: center;
+      margin: 16px 0 8px;
+      font-size: 12px;
+      color: #666;
+    }
+    .msg-date-divider span {
+      background: rgba(42,42,62,0.6);
+      padding: 4px 12px;
+      border-radius: 12px;
+    }
     .msg-reactions { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 4px; }
     .reaction-badge { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 2px 7px; font-size: 13px; cursor: pointer; transition: background 0.15s; user-select: none; }
     .reaction-badge:hover, .reaction-badge.mine { background: rgba(99,102,241,0.25); border-color: #6366f1; }
@@ -388,10 +904,53 @@
     .msg-img { max-width: 200px; max-height: 200px; border-radius: 8px; display: block; cursor: pointer; margin-top: 4px; }
     .btn-del-msg { background: transparent; border: none; color: #555; cursor: pointer; font-size: 11px; padding: 0 2px; transition: color 0.15s; }
     .btn-del-msg:hover { color: #f87171; }
-    .typing-indicator { font-size: 12px; color: #888; padding: 0 12px 6px; min-height: 20px; font-style: italic; }
+    .typing-indicator {
+      font-size: 13px;
+      color: #6366f1;
+      padding: 8px 16px;
+      min-height: 32px;
+      font-style: normal;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .typing-dots {
+      display: flex;
+      gap: 3px;
+    }
+    .typing-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #6366f1;
+      animation: typing-bounce 1.4s infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing-bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-8px); }
+    }
     .chat-input-row { display: flex; gap: 8px; }
-    .btn-photo { padding: 10px 12px; background: #2a2a3e; border: none; border-radius: 10px; color: #fff; cursor: pointer; font-size: 16px; flex-shrink: 0; }
-    .btn-photo:hover { background: #333; }
+    .btn-photo { 
+      background: transparent;
+      border: none;
+      color: #888;
+      cursor: pointer;
+      font-size: 20px;
+      padding: 0;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      border-radius: 50%;
+    }
+    .btn-photo:hover { 
+      background: rgba(99,102,241,0.2);
+      color: #6366f1;
+    }
 
     /* GROUP CHAT */
     .group-chat-header { padding: 10px 16px; background: rgba(99,102,241,0.1); border-bottom: 1px solid #2a2a3e; font-size: 13px; color: #6366f1; font-weight: 600; cursor: pointer; }
@@ -418,9 +977,19 @@
     #img-fullscreen img { max-width: 90vw; max-height: 90vh; border-radius: 10px; }
 
     .leaflet-control-attribution { display: none !important; }
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { 
+      background: rgba(15,15,26,0.3);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb { 
+      background: linear-gradient(180deg, #6366f1 0%, #8b5cf6 100%);
+      border-radius: 10px;
+      transition: background 0.3s;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #4f46e5 0%, #7c3aed 100%);
+    }
 
     /* ANIMATIONS */
     @keyframes fadeInUp {
@@ -628,11 +1197,21 @@
       <button class="btn-profile" id="current-user-badge" title="Мой профиль"></button>
       <button class="btn-share" id="btn-share-location">📍 <span class="share-text">Поделиться локацией</span></button>
       <button class="btn-share" id="btn-add-sticker" style="background:#a855f7">📌 <span class="share-text">Стикер</span></button>
+      <button class="btn-profile" id="btn-settings" title="Настройки" style="background:#6366f1">⚙️</button>
       <button class="btn-logout" id="btn-logout">Выйти</button>
     </div>
   </header>
   <div class="main-content">
-    <div id="map"></div>
+    <div id="map">
+      <div class="search-container">
+        <input type="text" id="search-address" placeholder="🔍 Поиск адреса..." />
+        <div id="search-results"></div>
+      </div>
+      <div class="favorites-btn">
+        <button class="btn-favorites" id="btn-favorites" title="Избранное">⭐</button>
+        <div class="favorites-list" id="favorites-list"></div>
+      </div>
+    </div>
     <div id="sidebar">
       <div class="tabs">
         <div class="tab active" data-tab="friends">👥 Друзья</div>
@@ -669,15 +1248,21 @@
       </div>
       <div id="tab-chat" style="display:none;">
         <div class="group-chat-header" id="btn-group-chat">👥 Групповой чат</div>
-        <div class="chat-header">Чат с: <span id="chat-with-name">выберите друга</span></div>
+        <div class="chat-header" id="chat-header">
+          <div class="chat-header-avatar" id="chat-avatar"></div>
+          <div class="chat-header-info">
+            <div class="chat-header-name" id="chat-with-name">Выберите друга</div>
+            <div class="chat-header-status" id="chat-status">был(а) недавно</div>
+          </div>
+        </div>
         <div class="typing-indicator" id="typing-indicator"></div>
         <div id="messages"></div>
         <div class="chat-input">
-          <div class="chat-input-row" style="width:100%">
-            <button class="btn-photo" id="btn-send-photo">📷</button>
+          <div class="chat-input-wrapper">
+            <button class="btn-attach" id="btn-send-photo" title="Прикрепить фото">📎</button>
             <input type="text" id="msg-input" placeholder="Сообщение..." maxlength="500" />
-            <button id="btn-send">➤</button>
           </div>
+          <button class="btn-send-msg" id="btn-send">➤</button>
           <input type="file" id="photo-file-input" accept="image/*" style="position:absolute;opacity:0;width:0;height:0" />
         </div>
       </div>
@@ -749,6 +1334,96 @@
 <!-- FULLSCREEN IMG -->
 <div id="img-fullscreen"><img id="img-fullscreen-src" /></div>
 
+<!-- BOTTOM PANEL -->
+<div class="bottom-panel">
+  <button class="panel-btn location" id="btn-panel-location" title="Поделиться локацией">📍</button>
+  <button class="panel-btn sticker" id="btn-panel-sticker" title="Добавить стикер">📌</button>
+  <div class="panel-divider"></div>
+  <button class="panel-btn geofence" id="btn-panel-geofence" title="Создать геозону">🚧</button>
+  <button class="panel-btn meet" id="btn-panel-meet" title="Найти место встречи">🤝</button>
+  <div class="panel-divider"></div>
+  <button class="panel-btn stats" id="btn-panel-stats" title="Статистика">📊</button>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal" id="settings-modal">
+  <div class="modal-box" style="max-width:500px;max-height:80vh;overflow-y:auto">
+    <h3>⚙️ Настройки</h3>
+    
+    <div style="margin-bottom:20px">
+      <h4 style="font-size:14px;color:#aaa;margin-bottom:12px">🎨 Тема карты</h4>
+      <select id="settings-map-theme" style="width:100%;padding:10px;background:rgba(15,15,26,0.6);border:2px solid rgba(99,102,241,0.2);border-radius:10px;color:#fff;outline:none">
+        <option value="light">Светлая</option>
+        <option value="dark">Тёмная</option>
+        <option value="satellite">Спутник</option>
+      </select>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <h4 style="font-size:14px;color:#aaa;margin-bottom:12px">🔔 Уведомления</h4>
+      <div class="privacy-row">
+        <span>Звук сообщений</span>
+        <label class="toggle-switch"><input type="checkbox" id="settings-sound" checked /><span class="toggle-slider"></span></label>
+      </div>
+      <div class="privacy-row">
+        <span>Уведомления о локации</span>
+        <label class="toggle-switch"><input type="checkbox" id="settings-notif-location" checked /><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <h4 style="font-size:14px;color:#aaa;margin-bottom:12px">📍 Локация</h4>
+      <div class="privacy-row">
+        <span>Авто-обновление</span>
+        <select id="settings-auto-update" style="background:#0f0f1a;border:1px solid #333;border-radius:6px;color:#fff;padding:4px 8px;font-size:12px">
+          <option value="0">Выкл</option>
+          <option value="30">30 сек</option>
+          <option value="60">1 мин</option>
+          <option value="300">5 мин</option>
+        </select>
+      </div>
+      <div class="privacy-row">
+        <span>Точность GPS</span>
+        <label class="toggle-switch"><input type="checkbox" id="settings-high-accuracy" checked /><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <h4 style="font-size:14px;color:#aaa;margin-bottom:12px">💬 Чат</h4>
+      <div class="privacy-row">
+        <span>Показывать "печатает"</span>
+        <label class="toggle-switch"><input type="checkbox" id="settings-typing" checked /><span class="toggle-slider"></span></label>
+      </div>
+      <div class="privacy-row">
+        <span>Автоудаление через</span>
+        <select id="settings-auto-delete" style="background:#0f0f1a;border:1px solid #333;border-radius:6px;color:#fff;padding:4px 8px;font-size:12px">
+          <option value="0">Никогда</option>
+          <option value="24">24 часа</option>
+          <option value="168">7 дней</option>
+          <option value="720">30 дней</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <h4 style="font-size:14px;color:#aaa;margin-bottom:12px">🗺️ Карта</h4>
+      <div class="privacy-row">
+        <span>Показывать стикеры</span>
+        <label class="toggle-switch"><input type="checkbox" id="settings-show-stickers" checked /><span class="toggle-slider"></span></label>
+      </div>
+      <div class="privacy-row">
+        <span>Показывать геозоны</span>
+        <label class="toggle-switch"><input type="checkbox" id="settings-show-geofences" checked /><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <div class="modal-buttons">
+      <button class="btn-cancel" id="btn-close-settings">Закрыть</button>
+      <button class="btn-save" id="btn-save-settings">Сохранить</button>
+    </div>
+  </div>
+</div>
+
 <!-- НЕХЕРА ВАШИ СКРИПТЫ -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script type="module">
@@ -789,7 +1464,11 @@
   let friendLocations = {};
   let isGroupChat = false;
   let autoHideTimer = null;
-  let privacyAllowed = null; // null = all, Set = only these
+  let privacyAllowed = null;
+  let currentTheme = 'default';
+  let userStats = { distance: 0, messages: 0, places: new Set() };
+  let pendingGeofence = null;
+  let geofenceCircles = {}; // null = all, Set = only these
 
   // ── MAP ──────────────────────────────────────────────────────────
   const map = L.map('map', { zoomControl: true }).setView([20, 0], 2);
@@ -914,6 +1593,7 @@
     document.getElementById('current-user-badge').textContent = '👤';
     loadFriends();
     loadStickers();
+    loadGeofences();
     loadBlocked();
     loadPrivacySettings();
     map.invalidateSize();
@@ -942,6 +1622,10 @@
   document.getElementById('btn-logout').onclick = () => {
     localStorage.removeItem('fm_user'); localStorage.removeItem('fm_pass');
     location.reload();
+  };
+
+  document.getElementById('btn-settings').onclick = () => {
+    document.getElementById('settings-modal').classList.add('show');
   };
 
   // ── LOCATION ─────────────────────────────────────────────────────
@@ -975,6 +1659,171 @@
       btn.innerHTML = '<span class="pulse-dot"></span> <span class="share-text">Трансляция...</span>';
       btn.classList.add('active');
     }
+  };
+
+  // Нижняя панель
+  document.getElementById('btn-panel-location').onclick = () => document.getElementById('btn-share-location').click();
+  document.getElementById('btn-panel-sticker').onclick = () => document.getElementById('btn-add-sticker').click();
+  
+  let tempGeofenceMarker = null;
+  let tempGeofenceCircle = null;
+  let mapClickHandler = null;
+
+  document.getElementById('btn-panel-geofence').onclick = () => {
+    if (!Object.keys(friends).length) {
+      alert('Сначала добавь друзей');
+      return;
+    }
+    
+    const select = document.getElementById('geofence-friend');
+    select.innerHTML = '<option value="">Выбери друга</option>';
+    Object.keys(friends).forEach(name => {
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name;
+      select.appendChild(opt);
+    });
+    
+    pendingGeofence = null;
+    document.getElementById('geofence-name').value = '';
+    document.getElementById('geofence-radius').value = '500';
+    document.getElementById('geofence-modal').classList.add('show');
+    
+    if (tempGeofenceMarker) { map.removeLayer(tempGeofenceMarker); tempGeofenceMarker = null; }
+    if (tempGeofenceCircle) { map.removeLayer(tempGeofenceCircle); tempGeofenceCircle = null; }
+    
+    mapClickHandler = e => {
+      pendingGeofence = e.latlng;
+      
+      if (tempGeofenceMarker) map.removeLayer(tempGeofenceMarker);
+      if (tempGeofenceCircle) map.removeLayer(tempGeofenceCircle);
+      
+      tempGeofenceMarker = L.marker([e.latlng.lat, e.latlng.lng], {
+        icon: L.divIcon({
+          className: '',
+          html: '<div style="font-size:32px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5))">🚧</div>',
+          iconSize: [32, 32],
+          iconAnchor: [16, 16]
+        })
+      }).addTo(map);
+      
+      const radius = parseInt(document.getElementById('geofence-radius').value) || 500;
+      tempGeofenceCircle = L.circle([e.latlng.lat, e.latlng.lng], {
+        radius: radius,
+        color: '#f59e0b',
+        fillColor: '#f59e0b',
+        fillOpacity: 0.2,
+        weight: 2,
+        dashArray: '5, 5'
+      }).addTo(map);
+    };
+    
+    map.on('click', mapClickHandler);
+  };
+
+  document.getElementById('geofence-radius').addEventListener('input', e => {
+    const radius = parseInt(e.target.value) || 500;
+    if (tempGeofenceCircle && pendingGeofence) {
+      map.removeLayer(tempGeofenceCircle);
+      tempGeofenceCircle = L.circle([pendingGeofence.lat, pendingGeofence.lng], {
+        radius: radius,
+        color: '#f59e0b',
+        fillColor: '#f59e0b',
+        fillOpacity: 0.2,
+        weight: 2,
+        dashArray: '5, 5'
+      }).addTo(map);
+    }
+  });
+
+  document.getElementById('btn-cancel-geofence').onclick = () => {
+    document.getElementById('geofence-modal').classList.remove('show');
+    pendingGeofence = null;
+    if (mapClickHandler) {
+      map.off('click', mapClickHandler);
+      mapClickHandler = null;
+    }
+    if (tempGeofenceMarker) { map.removeLayer(tempGeofenceMarker); tempGeofenceMarker = null; }
+    if (tempGeofenceCircle) { map.removeLayer(tempGeofenceCircle); tempGeofenceCircle = null; }
+  };
+
+  document.getElementById('btn-save-geofence').onclick = async () => {
+    if (!pendingGeofence) {
+      alert('Сначала кликни на карту');
+      return;
+    }
+    const name = document.getElementById('geofence-name').value.trim();
+    const friendName = document.getElementById('geofence-friend').value;
+    const radius = parseInt(document.getElementById('geofence-radius').value) || 500;
+    
+    if (!name) {
+      alert('Введи название геозоны');
+      return;
+    }
+    if (!friendName) {
+      alert('Выбери друга');
+      return;
+    }
+    
+    await push(ref(db, `geofences/${currentUser}`), {
+      name, friend: friendName, lat: pendingGeofence.lat, lng: pendingGeofence.lng, radius, ts: Date.now()
+    });
+    
+    document.getElementById('geofence-modal').classList.remove('show');
+    pendingGeofence = null;
+    if (mapClickHandler) {
+      map.off('click', mapClickHandler);
+      mapClickHandler = null;
+    }
+    if (tempGeofenceMarker) { map.removeLayer(tempGeofenceMarker); tempGeofenceMarker = null; }
+    if (tempGeofenceCircle) { map.removeLayer(tempGeofenceCircle); tempGeofenceCircle = null; }
+  };
+  document.getElementById('btn-panel-meet').onclick = () => {
+    const select = document.getElementById('meet-friend');
+    select.innerHTML = '<option value="">Выбери друга</option>';
+    Object.keys(friends).forEach(name => {
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name;
+      select.appendChild(opt);
+    });
+    document.getElementById('meet-modal').classList.add('show');
+  };
+
+  document.getElementById('btn-close-meet').onclick = () => {
+    document.getElementById('meet-modal').classList.remove('show');
+  };
+
+  document.getElementById('btn-close-stats').onclick = () => {
+    document.getElementById('stats-modal').classList.remove('show');
+  };
+
+  document.getElementById('btn-close-theme').onclick = () => {
+    document.getElementById('theme-modal').classList.remove('show');
+  };
+  document.getElementById('btn-panel-stats').onclick = () => {
+    const content = document.getElementById('stats-content');
+    content.innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="padding:12px;background:rgba(99,102,241,0.1);border-radius:10px;border:1px solid rgba(99,102,241,0.3)">
+          <div style="font-size:24px;font-weight:700;color:#6366f1">${userStats.distance.toFixed(1)} км</div>
+          <div style="font-size:12px;color:#888">Пройдено</div>
+        </div>
+        <div style="padding:12px;background:rgba(236,72,153,0.1);border-radius:10px;border:1px solid rgba(236,72,153,0.3)">
+          <div style="font-size:24px;font-weight:700;color:#ec4899">${userStats.messages}</div>
+          <div style="font-size:12px;color:#888">Сообщений</div>
+        </div>
+        <div style="padding:12px;background:rgba(139,92,246,0.1);border-radius:10px;border:1px solid rgba(139,92,246,0.3)">
+          <div style="font-size:24px;font-weight:700;color:#8b5cf6">${userStats.places.size}</div>
+          <div style="font-size:12px;color:#888">Мест посещено</div>
+        </div>
+        <div style="padding:12px;background:rgba(34,197,94,0.1);border-radius:10px;border:1px solid rgba(34,197,94,0.3)">
+          <div style="font-size:24px;font-weight:700;color:#22c55e">${Object.keys(friends).length}</div>
+          <div style="font-size:12px;color:#888">Друзей</div>
+        </div>
+      </div>
+    `;
+    document.getElementById('stats-modal').classList.add('show');
   };
 
   // ── FRIENDS ──────────────────────────────────────────────────────
@@ -1092,9 +1941,27 @@
   window.openChatWith = name => {
     chatWith = name; isGroupChat = false;
     document.getElementById('chat-with-name').textContent = name;
+    updateChatHeader(name);
     switchTab('chat');
     loadMessages();
   };
+
+  async function updateChatHeader(name) {
+    const avatar = await getAvatar(name);
+    const color = colorFor(name);
+    const avatarEl = document.getElementById('chat-avatar');
+    avatarEl.style.background = avatar ? 'transparent' : color;
+    avatarEl.innerHTML = avatar ? `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" />` : name[0].toUpperCase();
+    
+    const statusEl = document.getElementById('chat-status');
+    if (friendLocations[name]) {
+      statusEl.textContent = 'в сети';
+      statusEl.style.color = '#22c55e';
+    } else {
+      statusEl.textContent = 'был(а) недавно';
+      statusEl.style.color = '#888';
+    }
+  }
 
   document.getElementById('btn-group-chat').onclick = () => {
     chatWith = '__group__'; isGroupChat = true;
@@ -1122,7 +1989,12 @@
     if (typingUnsub) typingUnsub();
     typingUnsub = onValue(ref(db, `typing/${chatId}`), snap => {
       const typers = snap.val() ? Object.keys(snap.val()).filter(u => u !== currentUser) : [];
-      document.getElementById('typing-indicator').textContent = typers.length ? typers.join(', ') + ' печатает...' : '';
+      const indicator = document.getElementById('typing-indicator');
+      if (typers.length) {
+        indicator.innerHTML = `<span>${typers[0]} печатает</span><div class="typing-dots"><span></span><span></span><span></span></div>`;
+      } else {
+        indicator.textContent = '';
+      }
     });
   }
 
@@ -1144,21 +2016,42 @@
         const isMine = msg.from === currentUser;
         const wrap = document.createElement('div');
         wrap.className = 'msg-wrap ' + (isMine ? 'mine' : 'theirs');
-        wrap.style.animationDelay = `${Math.min(idx * 0.04, 0.3)}s`;
+        wrap.style.animationDelay = `${Math.min(idx * 0.02, 0.2)}s`;
 
         const msgEl = document.createElement('div');
         msgEl.className = 'msg';
-        msgEl.style.padding = '9px 13px';
-        msgEl.style.borderRadius = '12px';
-        msgEl.style.fontSize = '13px';
-        msgEl.style.lineHeight = '1.4';
-        msgEl.style.wordBreak = 'break-word';
-        if (!isMine) msgEl.innerHTML = `<div class="msg-sender">${msg.from}</div>`;
-        if (msg.img) {
-          msgEl.innerHTML += `<img class="msg-img" src="${msg.img}" onclick="window.openImg('${msg.img}')" />`;
-        } else {
-          msgEl.innerHTML += escHtml(msg.text || '');
+        
+        if (!isMine && isGroupChat) {
+          const sender = document.createElement('div');
+          sender.className = 'msg-sender';
+          sender.textContent = msg.from;
+          msgEl.appendChild(sender);
         }
+        
+        const textEl = document.createElement('div');
+        if (msg.img) {
+          textEl.innerHTML = `<img class="msg-img" src="${msg.img}" onclick="window.openImg('${msg.img}')" />`;
+        } else {
+          textEl.textContent = msg.text || '';
+        }
+        msgEl.appendChild(textEl);
+
+        const timeEl = document.createElement('div');
+        timeEl.className = 'msg-time';
+        const time = msg.ts ? new Date(msg.ts).toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' }) : '';
+        if (isMine) {
+          const ticks = document.createElement('span');
+          ticks.className = 'msg-ticks';
+          ticks.textContent = '✓✓';
+          get(ref(db, `read/${chatId}/${chatWith}`)).then(s => {
+            if (s.exists() && msg.ts && s.val() >= msg.ts) ticks.classList.add('read');
+          });
+          timeEl.appendChild(document.createTextNode(time));
+          timeEl.appendChild(ticks);
+        } else {
+          timeEl.textContent = time;
+        }
+        msgEl.appendChild(timeEl);
 
         const picker = document.createElement('div');
         picker.className = 'reaction-picker';
@@ -1192,23 +2085,6 @@
           wrap.appendChild(reactRow);
         }
 
-        const meta = document.createElement('div');
-        meta.className = 'msg-meta';
-        if (isMine) {
-          const delBtn = document.createElement('button');
-          delBtn.className = 'btn-del-msg';
-          delBtn.textContent = '🗑';
-          delBtn.onclick = () => remove(ref(db, `chats/${chatId}/${msgId}`));
-          meta.appendChild(delBtn);
-          const ticks = document.createElement('span');
-          ticks.className = 'msg-ticks';
-          ticks.textContent = '✓✓';
-          get(ref(db, `read/${chatId}/${chatWith}`)).then(s => {
-            if (s.exists() && msg.ts && s.val() >= msg.ts) ticks.classList.add('read');
-          });
-          meta.appendChild(ticks);
-        }
-        wrap.appendChild(meta);
         container.appendChild(wrap);
       });
       container.scrollTop = container.scrollHeight;
@@ -1237,6 +2113,8 @@
     const chatId = getChatId(currentUser, chatWith);
     push(ref(db, `chats/${chatId}`), { from: currentUser, text, ts: Date.now() });
     remove(ref(db, `typing/${chatId}/${currentUser}`));
+    userStats.messages++;
+    set(ref(db, `stats/${currentUser}/messages`), userStats.messages);
     input.value = '';
   }
 
@@ -1356,6 +2234,13 @@
     document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
     document.getElementById('tab-friends').style.display = name === 'friends' ? 'block' : 'none';
     document.getElementById('tab-chat').style.display = name === 'chat' ? 'flex' : 'none';
+    // Анимация индикатора вкладок
+    const tabs = document.querySelector('.tabs');
+    if (name === 'chat') {
+      tabs.classList.add('chat-active');
+    } else {
+      tabs.classList.remove('chat-active');
+    }
   }
 
   function escHtml(str) {
@@ -1486,6 +2371,37 @@
     });
   }
 
+  function loadGeofences() {
+    onValue(ref(db, `geofences/${currentUser}`), snap => {
+      Object.values(geofenceCircles).forEach(c => map.removeLayer(c));
+      geofenceCircles = {};
+      if (!snap.exists()) return;
+      Object.entries(snap.val()).forEach(([id, g]) => {
+        const circle = L.circle([g.lat, g.lng], {
+          radius: g.radius,
+          color: '#f59e0b',
+          fillColor: '#f59e0b',
+          fillOpacity: 0.15,
+          weight: 2
+        }).addTo(map);
+        circle.bindPopup(`<div class="popup-content"><strong>🚧 ${g.name}</strong><br><small>Друг: ${g.friend}</small><br><small>Радиус: ${g.radius}м</small></div>`);
+        geofenceCircles[id] = circle;
+        watchGeofence(id, g);
+      });
+    });
+  }
+
+  function watchGeofence(id, geofence) {
+    onValue(ref(db, `locations/${geofence.friend}`), snap => {
+      if (!snap.exists()) return;
+      const { lat, lng } = snap.val();
+      const dist = map.distance([geofence.lat, geofence.lng], [lat, lng]);
+      if (dist <= geofence.radius) {
+        showNotif('🚧 Геозона', `${geofence.friend} в зоне "${geofence.name}"`);
+      }
+    });
+  }
+
   // ── FRIENDS ACTIONS ───────────────────────────────────────────────
   window.removeFriend = async name => {
     if (!confirm(`Удалить ${name} из друзей?`)) return;
@@ -1591,6 +2507,344 @@
       }
     });
   }
+
+  // ── SETTINGS ─────────────────────────────────────────────────────
+  let appSettings = {
+    mapTheme: 'light',
+    sound: true,
+    notifLocation: true,
+    autoUpdate: 0,
+    highAccuracy: true,
+    typing: true,
+    autoDelete: 0,
+    showStickers: true,
+    showGeofences: true
+  };
+
+  function loadAppSettings() {
+    const saved = localStorage.getItem('fm_settings');
+    if (saved) appSettings = { ...appSettings, ...JSON.parse(saved) };
+    applyAppSettings();
+  }
+
+  function applyAppSettings() {
+    if (!document.getElementById('settings-map-theme')) return;
+    document.getElementById('settings-map-theme').value = appSettings.mapTheme;
+    document.getElementById('settings-sound').checked = appSettings.sound;
+    document.getElementById('settings-notif-location').checked = appSettings.notifLocation;
+    document.getElementById('settings-auto-update').value = appSettings.autoUpdate;
+    document.getElementById('settings-high-accuracy').checked = appSettings.highAccuracy;
+    document.getElementById('settings-typing').checked = appSettings.typing;
+    document.getElementById('settings-auto-delete').value = appSettings.autoDelete;
+    document.getElementById('settings-show-stickers').checked = appSettings.showStickers;
+    document.getElementById('settings-show-geofences').checked = appSettings.showGeofences;
+    
+    updateMapTheme();
+    toggleStickersVisibility();
+    toggleGeofencesVisibility();
+  }
+
+  function updateMapTheme() {
+    const tiles = {
+      light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+      dark: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      satellite: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+    };
+    map.eachLayer(layer => { if (layer._url) map.removeLayer(layer); });
+    L.tileLayer(tiles[appSettings.mapTheme] || tiles.light, { maxZoom: 19 }).addTo(map);
+  }
+
+  function toggleStickersVisibility() {
+    Object.values(stickerMarkers).forEach(m => {
+      appSettings.showStickers ? m.addTo(map) : map.removeLayer(m);
+    });
+  }
+
+  function toggleGeofencesVisibility() {
+    Object.values(geofenceCircles).forEach(c => {
+      appSettings.showGeofences ? c.addTo(map) : map.removeLayer(c);
+    });
+  }
+
+  document.getElementById('btn-close-settings').onclick = () => {
+    document.getElementById('settings-modal').classList.remove('show');
+  };
+
+  document.getElementById('btn-save-settings').onclick = () => {
+    appSettings.mapTheme = document.getElementById('settings-map-theme').value;
+    appSettings.sound = document.getElementById('settings-sound').checked;
+    appSettings.notifLocation = document.getElementById('settings-notif-location').checked;
+    appSettings.autoUpdate = parseInt(document.getElementById('settings-auto-update').value);
+    appSettings.highAccuracy = document.getElementById('settings-high-accuracy').checked;
+    appSettings.typing = document.getElementById('settings-typing').checked;
+    appSettings.autoDelete = parseInt(document.getElementById('settings-auto-delete').value);
+    appSettings.showStickers = document.getElementById('settings-show-stickers').checked;
+    appSettings.showGeofences = document.getElementById('settings-show-geofences').checked;
+    
+    localStorage.setItem('fm_settings', JSON.stringify(appSettings));
+    applyAppSettings();
+    document.getElementById('settings-modal').classList.remove('show');
+  };
+
+  window.addEventListener('load', loadAppSettings);
+
+  // ── ADDRESS SEARCH ───────────────────────────────────────────────
+  const searchInput = document.getElementById('search-address');
+  const searchResults = document.getElementById('search-results');
+  let searchMarker = null;
+  let searchTimeout = null;
+
+  searchInput.addEventListener('input', e => {
+    clearTimeout(searchTimeout);
+    const query = e.target.value.trim();
+    if (query.length < 3) { searchResults.classList.remove('show'); return; }
+    searchTimeout = setTimeout(() => searchAddress(query), 300);
+  });
+
+  async function searchAddress(query) {
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&accept-language=ru`);
+      const data = await res.json();
+      if (!data.length) {
+        searchResults.innerHTML = '<div class="search-result-item"><div class="name">Ничего не найдено</div></div>';
+        searchResults.classList.add('show');
+        return;
+      }
+      searchResults.innerHTML = data.map(r => `
+        <div class="search-result-item" onclick="selectSearchResult(${r.lat}, ${r.lon}, '${escHtml(r.display_name).replace(/'/g, "\\'")}')">
+          <div class="name">${r.display_name.split(',')[0]}</div>
+          <div class="addr">${r.display_name}</div>
+        </div>
+      `).join('');
+      searchResults.classList.add('show');
+    } catch (err) {
+      console.error('Search error:', err);
+    }
+  }
+
+  window.selectSearchResult = (lat, lon, name) => {
+    searchResults.classList.remove('show');
+    searchInput.value = name.split(',')[0];
+    
+    if (searchMarker) map.removeLayer(searchMarker);
+    searchMarker = L.marker([lat, lon], {
+      icon: L.divIcon({
+        className: '',
+        html: '<div style="font-size:28px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5))">📍</div>',
+        iconSize: [28, 28],
+        iconAnchor: [14, 28]
+      })
+    }).addTo(map);
+    
+    searchMarker.bindPopup(`<div class="popup-content"><strong>${name.split(',')[0]}</strong><br><small style="color:#888">${name}</small></div>`).openPopup();
+    map.setView([lat, lon], 16);
+  };
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.search-container')) {
+      searchResults.classList.remove('show');
+    }
+    if (!e.target.closest('.favorites-btn')) {
+      document.getElementById('favorites-list').classList.remove('show');
+    }
+  });
+
+  // ── FAVORITES ────────────────────────────────────────────────────
+  let favorites = JSON.parse(localStorage.getItem('fm_favorites') || '[]');
+  let tempFavoriteData = null;
+
+  function saveFavorites() {
+    localStorage.setItem('fm_favorites', JSON.stringify(favorites));
+  }
+
+  function renderFavorites() {
+    const list = document.getElementById('favorites-list');
+    if (!favorites.length) {
+      list.innerHTML = '<div class="favorite-item"><div class="name" style="color:#666">Пусто</div></div>';
+      return;
+    }
+    list.innerHTML = favorites.map((f, i) => `
+      <div class="favorite-item" onclick="goToFavorite(${i})">
+        <div class="name">${f.name}</div>
+        <div class="addr">${f.addr}</div>
+        <button class="btn-remove-fav" onclick="event.stopPropagation(); removeFavorite(${i})" title="Удалить">✕</button>
+      </div>
+    `).join('');
+  }
+
+  window.goToFavorite = index => {
+    const f = favorites[index];
+    if (!f) return;
+    document.getElementById('favorites-list').classList.remove('show');
+    
+    if (searchMarker) map.removeLayer(searchMarker);
+    searchMarker = L.marker([f.lat, f.lon], {
+      icon: L.divIcon({
+        className: '',
+        html: '<div style="font-size:28px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5))">📍</div>',
+        iconSize: [28, 28],
+        iconAnchor: [14, 28]
+      })
+    }).addTo(map);
+    
+    searchMarker.bindPopup(`<div class="popup-content"><strong>${f.name}</strong><br><small style="color:#888">${f.addr}</small><br><button class="popup-fav-btn" onclick="removeFavoriteMarker(${index})">🗑 Удалить</button></div>`).openPopup();
+    map.setView([f.lat, f.lon], 16);
+  };
+
+  window.removeFavorite = index => {
+    favorites.splice(index, 1);
+    saveFavorites();
+    renderFavorites();
+  };
+
+  window.removeFavoriteMarker = index => {
+    favorites.splice(index, 1);
+    saveFavorites();
+    renderFavorites();
+    if (searchMarker) map.removeLayer(searchMarker);
+  };
+
+  window.addFavorite = (lat, lon, name, addr) => {
+    const exists = favorites.some(f => f.lat == lat && f.lon == lon);
+    if (exists) {
+      alert('Уже в избранном');
+      return;
+    }
+    // Показываем prompt для ввода названия
+    const customName = prompt('Введите название места:', name.split(',')[0]);
+    if (customName === null) return; // Отмена
+    const finalName = customName.trim() || name.split(',')[0];
+    favorites.push({ lat, lon, name: finalName, addr, ts: Date.now() });
+    saveFavorites();
+    renderFavorites();
+    alert('Добавлено в избранное!');
+  };
+
+  document.getElementById('btn-favorites').onclick = e => {
+    e.stopPropagation();
+    renderFavorites();
+    document.getElementById('favorites-list').classList.toggle('show');
+  };
+
+  // Обновляем selectSearchResult для добавления кнопки "В избранное"
+  window.selectSearchResult = (lat, lon, name) => {
+    searchResults.classList.remove('show');
+    searchInput.value = name.split(',')[0];
+    
+    if (searchMarker) map.removeLayer(searchMarker);
+    searchMarker = L.marker([lat, lon], {
+      icon: L.divIcon({
+        className: '',
+        html: '<div style="font-size:28px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5))">📍</div>',
+        iconSize: [28, 28],
+        iconAnchor: [14, 28]
+      })
+    }).addTo(map);
+    
+    const shortName = name.split(',')[0];
+    tempFavoriteData = { lat, lon, name, addr: name };
+    searchMarker.bindPopup(`<div class="popup-content"><strong>${shortName}</strong><br><small style="color:#888">${name}</small><br><button class="popup-fav-btn" onclick="addFavorite(${lat}, ${lon}, '${shortName.replace(/'/g, "\\'")}', '${name.replace(/'/g, "\\'")}')">⭐ В избранное</button></div>`).openPopup();
+    map.setView([lat, lon], 16);
+  };
 </script>
 </body>
 </html>
+
+<!-- GEOFENCE MODAL -->
+<div class="modal" id="geofence-modal">
+  <div class="modal-box">
+    <h3>🚧 Создать геозону</h3>
+    <input type="text" id="geofence-name" placeholder="Название (Дом, Работа...)" style="width:100%;padding:10px;margin-bottom:12px;background:rgba(15,15,26,0.6);border:2px solid rgba(99,102,241,0.2);border-radius:10px;color:#fff;outline:none" />
+    <select id="geofence-friend" style="width:100%;padding:10px;margin-bottom:12px;background:rgba(15,15,26,0.6);border:2px solid rgba(99,102,241,0.2);border-radius:10px;color:#fff;outline:none"></select>
+    <input type="number" id="geofence-radius" placeholder="Радиус (метры)" value="500" style="width:100%;padding:10px;margin-bottom:12px;background:rgba(15,15,26,0.6);border:2px solid rgba(99,102,241,0.2);border-radius:10px;color:#fff;outline:none" />
+    <p style="font-size:12px;color:#888;margin-bottom:12px">Кликни на карту чтобы выбрать место</p>
+    <div class="modal-buttons">
+      <button class="btn-cancel" id="btn-cancel-geofence">Отмена</button>
+      <button class="btn-save" id="btn-save-geofence">Создать</button>
+    </div>
+  </div>
+</div>
+
+<!-- MEET MODAL -->
+<div class="modal" id="meet-modal">
+  <div class="modal-box">
+    <h3>🤝 Место встречи</h3>
+    <select id="meet-friend" style="width:100%;padding:10px;margin-bottom:12px;background:rgba(15,15,26,0.6);border:2px solid rgba(99,102,241,0.2);border-radius:10px;color:#fff;outline:none"></select>
+    <div id="meet-result" style="margin-bottom:12px;font-size:13px;color:#aaa"></div>
+    <div class="modal-buttons">
+      <button class="btn-cancel" id="btn-close-meet">Закрыть</button>
+      <button class="btn-save" id="btn-find-meet">Найти место</button>
+    </div>
+  </div>
+</div>
+
+<!-- STATS MODAL -->
+<div class="modal" id="stats-modal">
+  <div class="modal-box">
+    <h3>📊 Статистика</h3>
+    <div id="stats-content" style="margin-bottom:16px"></div>
+    <div class="modal-buttons">
+      <button class="btn-cancel" id="btn-close-stats">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- THEME MODAL -->
+<div class="modal" id="theme-modal">
+  <div class="modal-box">
+    <h3>🎨 Темы оформления</h3>
+    <div id="theme-list" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px"></div>
+    <div class="modal-buttons">
+      <button class="btn-cancel" id="btn-close-theme">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal" id="settings-modal">
+  <div class="modal-box">
+    <h3>⚙️ Настройки</h3>
+    <div style="margin-bottom:20px">
+      <h4 style="font-size:14px;color:#aaa;margin-bottom:12px">🎨 Тема оформления</h4>
+      <div id="settings-theme-list" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px"></div>
+    </div>
+    <div class="modal-buttons">
+      <button class="btn-cancel" id="btn-close-settings">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('btn-close-settings').onclick = () => {
+    document.getElementById('settings-modal').classList.remove('show');
+  };
+  
+  function renderThemeSettings() {
+    const list = document.getElementById('settings-theme-list');
+    const THEMES = {
+      default: { name: '🌌 Стандарт', bg: '#0a0a12' },
+      dark: { name: '🌑 Тёмная', bg: '#000000' },
+      neon: { name: '🔆 Неон', bg: '#0d0221' },
+      minimal: { name: '✨ Минимализм', bg: '#1a1a1a' }
+    };
+    list.innerHTML = '';
+    Object.entries(THEMES).forEach(([key, theme]) => {
+      const div = document.createElement('div');
+      div.style.cssText = `padding:16px;border-radius:12px;cursor:pointer;background:${theme.bg};border:3px solid ${currentTheme === key ? '#6366f1' : 'rgba(99,102,241,0.2)'};transition:all 0.3s;text-align:center`;
+      div.innerHTML = `<div style="font-size:24px;margin-bottom:4px">${theme.name.split(' ')[0]}</div><div style="font-size:12px">${theme.name.split(' ')[1]}</div>`;
+      div.onclick = () => {
+        currentTheme = key;
+        localStorage.setItem('fm_theme', key);
+        document.body.style.background = theme.bg;
+        renderThemeSettings();
+      };
+      list.appendChild(div);
+    });
+  }
+  
+  const originalSettingsClick = document.getElementById('btn-settings').onclick;
+  document.getElementById('btn-settings').onclick = () => {
+    renderThemeSettings();
+    document.getElementById('settings-modal').classList.add('show');
+  };
+</script>
