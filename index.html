@@ -1557,21 +1557,26 @@
     if (!name || !pass) { errEl.textContent = 'Заполните все поля'; return; }
     if (!/^[a-zA-Zа-яА-Я0-9_]+$/.test(name)) { errEl.textContent = 'Только буквы, цифры и _'; return; }
 
-    const userRef = ref(db, `users/${name}`);
-    const snap = await get(userRef);
+    try {
+      const userRef = ref(db, `users/${name}`);
+      const snap = await get(userRef);
 
-    if (isRegister) {
-      if (snap.exists()) { errEl.textContent = 'Имя уже занято'; return; }
-      await set(userRef, { password: btoa(pass), createdAt: Date.now() });
-    } else {
-      if (!snap.exists()) { errEl.textContent = 'Пользователь не найден'; return; }
-      if (snap.val().password !== btoa(pass)) { errEl.textContent = 'Неверный пароль'; return; }
+      if (isRegister) {
+        if (snap.exists()) { errEl.textContent = 'Имя уже занято'; return; }
+        await set(userRef, { password: btoa(pass), createdAt: Date.now() });
+      } else {
+        if (!snap.exists()) { errEl.textContent = 'Пользователь не найден'; return; }
+        if (snap.val().password !== btoa(pass)) { errEl.textContent = 'Неверный пароль'; return; }
+      }
+
+      currentUser = name;
+      localStorage.setItem('fm_user', name);
+      localStorage.setItem('fm_pass', btoa(pass));
+      startApp();
+    } catch (e) {
+      console.error('Auth error:', e);
+      errEl.textContent = 'Ошибка соединения с базой данных';
     }
-
-    currentUser = name;
-    localStorage.setItem('fm_user', name);
-    localStorage.setItem('fm_pass', btoa(pass));
-    startApp();
   };
 
   document.getElementById('auth-name').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('auth-pass').focus(); });
